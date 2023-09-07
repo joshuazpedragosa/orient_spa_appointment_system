@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login|Signup</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|IBM+Plex+Sans:600" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts (Roboto) -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    
+    <!-- MDB (Material Design for Bootstrap) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet">
+    <link href="{% static 'css/verification.css' %}" rel="stylesheet">
+    <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+    ></script>
+</head>
+<body class="is-boxed has-animations">
+    <div class="card-container">
+        <div class="card text-center">
+            <div class="card-header">Verify your account</div>
+            <div class="card-body">
+            <h5 class="card-title">4-digit code</h5>
+            <div id="alert">
+
+            </div>
+            <p class="card-text">
+                <input type="text" onkeyup="Code1(this.value)" class="code" id="code1">
+                <input type="text" onkeyup="Code2(this.value)" class="code"  id="code2">
+                <input type="text" onkeyup="Code3(this.value)" class="code"  id="code3">
+                <input type="text" onkeyup="Code4(this.value)" class="code"  id="code4">
+            </p>
+            <a href="#" onclick="submitCode('{{email}}')" class="btn btn-primary">Submit</a>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'authentication/auth.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login|Signup</title>
+   <!-- Font Awesome -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"
+    rel="stylesheet"
+    />
+    <link href="{% static 'css/client.css' %}" rel="stylesheet">
+    <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+    ></script>
+</head>
+<body class="is-boxed has-animations">
+   <!--Main Navigation-->
+<header>
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+      <div class="position-sticky">
+        <div class="list-group list-group-flush mx-3 mt-4">
+          <div>
+            <h4>{{request.session.first_name}} {{request.session.last_name}}</h4>
+            <p>{{request.session.email}}</p>
+            <div class="d-grid gap-2">
+                <button class="btn btn-danger" onclick="logout()" data-mdb-toggle="modal" data-mdb-target="#Modal" type="button">Logout</button>
+            <div>
+          </div>
+          <a
+            href="{% url 'home' %}"
+            class="list-group-item list-group-item-action py-2 ripple"
+            aria-current="true"
+          >
+            <i class="fas fa-home-alt fa-fw me-3"></i><span>Home</span>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action py-2 ripple active"
+            ><i class="fas fa-calendar fa-fw me-3"></i><span>Appointments</span></a
+          >
+          <a href="{% url 'services' %}" class="list-group-item list-group-item-action py-2 ripple"
+            ><i class="fas fa-file fa-fw me-3"></i><span>Services</span></a
+          >
+          <a href="{% url 'chat' %}" class="list-group-item list-group-item-action py-2 ripple"
+            ><i class="fas fa-envelope fa-fw me-3"></i><span>Chat</span></a
+          >
+          <a href="{% url 'settings' %}" class="list-group-item list-group-item-action py-2 ripple"
+            ><i class="fas fa-gear fa-fw me-3"></i><span>Settings</span></a
+          >
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+  
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+      <!-- Container wrapper -->
+      <div class="container-fluid">
+        <!-- Toggle button -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-mdb-toggle="collapse"
+          data-mdb-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+  
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">
+          <img
+            src="{% static 'img/Orient_spa_Logo.jpg' %}"
+            height="50"
+            width="80"
+            alt="Orient SPA Logo"
+            loading="lazy"
+          />
+        </a>
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+  </header>
+  <!--Main Navigation-->
+  
+  <!--Main layout-->
+  <main style="margin-top: 58px;">
+    <div class="container pt-4">
+
+      <div class="mb-4 d-flex w-100">
+        <h4 class="mb-4">
+          My Appointments
+        </h4>
+        <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+          <h5><i class="fas fa-calendar-alt"></i> <span id="date"></span></h5>
+        </div>
+      </div>
+
+        <div class="mb-4">
+          <a class="btn text-white" id="NewAppointment" data-mdb-toggle="modal" data-mdb-target="#Modal" style="background-color: #55acee;" href="#!" role="button">
+            <i class="fas fa-calendar-plus me-2"></i>
+              New Appointment
+          </a>
+        </div>
+
+              <!-- Tabs navs -->
+        <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link active"
+              id="ex1-tab-1"
+              data-mdb-toggle="tab"
+              href="#ex1-tabs-1"
+              role="tab"
+              aria-controls="ex1-tabs-1"
+              aria-selected="true"
+              >Pending</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="ex1-tab-2"
+              data-mdb-toggle="tab"
+              href="#ex1-tabs-2"
+              role="tab"
+              aria-controls="ex1-tabs-2"
+              aria-selected="false"
+              >Confirmed</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="ex1-tab-3"
+              data-mdb-toggle="tab"
+              href="#ex1-tabs-3"
+              role="tab"
+              aria-controls="ex1-tabs-3"
+              aria-selected="false"
+              >Canceled</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="ex1-tab-4"
+              data-mdb-toggle="tab"
+              href="#ex1-tabs-4"
+              role="tab"
+              aria-controls="ex1-tabs-4"
+              aria-selected="false"
+              >Paid</a
+            >
+          </li>
+        </ul>
+        <!-- Tabs navs -->
+
+        <!-- Tabs content -->
+        <div class="tab-content" id="ex1-content">
+          <div
+            class="tab-pane fade show active"
+            id="ex1-tabs-1"
+            role="tabpanel"
+            aria-labelledby="ex1-tab-1"
+          >
+          <div class="card-booking-container">
+
+            <div class="card text-center">
+              <div class="card-header">Featured</div>
+              <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                2 days ago
+              </div>
+              <div class="card-footer text-muted">
+                <a href="#" class="btn btn-secondary">Cancel Appointment</a>
+              </div>
+            </div>
+  
+            <div class="card text-center">
+              <div class="card-header">Featured</div>
+              <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                2 days ago
+              </div>
+              <div class="card-footer text-muted">
+                <a href="#" class="btn btn-secondary">Cancel Appointment</a>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+            Tab 2 content
+          </div>
+          <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+            Tab 3 content
+          </div>
+          <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
+            Tab 4 content
+          </div>
+        </div>
+        <!-- Tabs content -->
+    </div>
+  </main>
+  <!--Main layout-->
+  <script>
+    const currentDate = new Date();
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString(undefined, options);
+    document.getElementById('date').innerHTML = formattedDate
+  </script>
+  <script src="{% static 'js/modal_content.js' %}"></script>
+  {% include 'modal/modal.html' %}
+</body>
+</html>

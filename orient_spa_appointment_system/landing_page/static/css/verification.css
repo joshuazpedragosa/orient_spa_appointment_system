@@ -1,0 +1,17 @@
+input{
+    width: 5%;
+    outline: none;
+    text-align: center;
+}
+.card-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.card{
+    max-width: 50%;
+}
+body{
+    background-color: #dedede;
+}

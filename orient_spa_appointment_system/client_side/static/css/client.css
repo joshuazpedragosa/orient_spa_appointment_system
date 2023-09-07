@@ -1,0 +1,75 @@
+body {
+    background-color: #fbfbfb;
+  }
+  @media (min-width: 991.98px) {
+    main {
+      padding-left: 240px;
+    }
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 58px 0 0; /* Height of navbar */
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+    width: 240px;
+    z-index: 600;
+  }
+  
+  @media (max-width: 991.98px) {
+    .sidebar {
+      width: 100%;
+    }
+  }
+  .sidebar .active {
+    border-radius: 5px;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  }
+  
+  .sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  }
+  main{
+    margin: 5rem 0 0 0; 
+  }
+  .client-dashboard{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .home-header{
+    background-color: #CAEDFF;
+    padding: 4rem;
+    border-radius: 20px;
+  }
+  .card-container{
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    margin-top: 2rem;
+    min-width: 50%;
+  }
+  .table-container{
+    width: 100%;
+  }
+
+  .card-booking-container{
+    display: grid;
+    gap: 1rem;
+  }
+
+  .header-container{
+    display: flex;
+  }
+
+  input{
+    border: 1px solid #7d7d7d;
+  }
