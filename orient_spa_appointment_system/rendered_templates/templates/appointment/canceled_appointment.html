@@ -1,0 +1,24 @@
+{% for x in response %}
+    {% if x.id != ''%}
+    <div class="card text-center">
+        <div class="card-header danger"></div>
+        <div class="card-body">
+        <h5 class="card-title">{{x.service_name}}</h5>
+        <p class="card-text">Price: ₱{{x.service_price}}</p>
+        Date: {{x.appointment_date}} <br> Time: {{x.appointment_time}}
+        </div>
+        <div class="card-footer text-muted">
+        <span class="badge badge-danger">Appointment Canceled</span>
+        </div>
+    </div><br>
+    {% else %}
+    <div class="card text-center">
+        <div class="card-header"></div>
+        <div class="card-body">
+        <h5 class="card-title">No appointment available.</h5>
+        </div>
+        <div class="card-footer text-muted">
+        </div>
+    </div><br>
+    {% endif %}
+{% endfor %}

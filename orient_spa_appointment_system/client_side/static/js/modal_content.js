@@ -1,44 +1,22 @@
-document.getElementById('NewAppointment').addEventListener('click', function(e){
-    e.preventDefault()
+function NewAppointment(){
+    fetch('/controller/modal_content/')
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text();
+    })
+    .then((html) => {
+        document.getElementById('Modal').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('API Error: ', error)
+        alert('Something went wrong!')
+    })
 
-    let modal_content = `<div class="modal-dialog">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Add New Appointment</h5>
-                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
+    return false;
+}
 
-                            <div class="form-outline">
-                                <input type="number" id="typeNumber" class="form-control border-dark" />
-                                <label class="form-label" for="typeNumber">Number input</label>
-                            </div>
-
-                            <div class="form-outline">
-                                <input type="Date" class="form-control" />
-                                <input type="Time" class="form-control" />
-                            </div>
-
-                            <div class="form-outline">
-                                <select id="services" class="form-control">
-                                    <option value=""></option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <label class="form-label" for="services">Choose Service</label>
-                            </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save</button>
-                            </div>
-                            </div>
-                        </div>`;
-
-  document.getElementById('Modal').innerHTML = modal_content;
-})
 
 function logout(){
     let modal_logout = `<div class="modal-dialog">
@@ -72,4 +50,63 @@ function delSession(){
         alert('Something went wrong! Please check your internet connection.')
         console.error('api error: ' , error)
     })
+}
+
+function addService(){
+    let service_form = `<div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Service</h5>
+                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="submit" id="addService" enctype="multipart/form-data">
+                        <div class="modal-body">
+                        <span style="color: red;" id="errmsg"></span>
+                            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                                <img
+                                src="#"
+                                alt="Service"
+                                class="img-fluid rounded"
+                                style="width: 20%;"
+                                id="img"
+                                />
+                            </div>
+                            <div class="form-outline">
+                            <input type="file" onchange="viewImg()" id="imgInp" style="border: 1px solid gray;" accept="image/png, image/gif, image/jpeg" class="form-control" />
+                            </div><br>
+
+                            <div class="form-outline">
+                            <input type="text" id="service_name" style="border: 1px solid gray;" class="form-control" />
+                            <label class="form-label" for="service_namet">Service Name</label>
+                            </div><br>
+
+                            <div class="form-outline">
+                            <input type="number" id="price" style="border: 1px solid gray;" class="form-control" />
+                            <label class="form-label" for="price">Price</label>
+                            </div><br>
+
+                            <div class="form-outline">
+                            <textarea class="form-control" id="description" style="border: 1px solid gray;" rows="4"></textarea>
+                            <label class="form-label" for="description">Description</label>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                        </form>
+                        </div>
+                    </div>`;
+
+    document.getElementById('Modal').innerHTML = service_form;
+    loadForm()
+}
+
+
+function viewImg(){
+    const [file] = imgInp.files
+    if (file) {
+       img.src = URL.createObjectURL(file)
+    }
 }

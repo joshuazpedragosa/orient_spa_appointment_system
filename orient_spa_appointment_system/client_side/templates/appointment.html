@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login|Signup</title>
+    <title>Appointment | {{request.session.first_name}} {{request.session.last_name}}</title>
    <!-- Font Awesome -->
     <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -113,7 +113,7 @@
       </div>
 
         <div class="mb-4">
-          <a class="btn text-white" id="NewAppointment" data-mdb-toggle="modal" data-mdb-target="#Modal" style="background-color: #55acee;" href="#!" role="button">
+          <a class="btn text-white" onclick="NewAppointment()" data-mdb-toggle="modal" data-mdb-target="#Modal" style="background-color: #55acee;" href="#!" role="button">
             <i class="fas fa-calendar-plus me-2"></i>
               New Appointment
           </a>
@@ -130,7 +130,8 @@
               role="tab"
               aria-controls="ex1-tabs-1"
               aria-selected="true"
-              >Pending</a
+              >Pending
+              </a
             >
           </li>
           <li class="nav-item" role="presentation">
@@ -145,7 +146,7 @@
               >Confirmed</a
             >
           </li>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item" onclick="displayCanceled()" role="presentation">
             <a
               class="nav-link"
               id="ex1-tab-3"
@@ -154,8 +155,9 @@
               role="tab"
               aria-controls="ex1-tabs-3"
               aria-selected="false"
-              >Canceled</a
-            >
+              >
+              Canceled
+              </a>
           </li>
           <li class="nav-item" role="presentation">
             <a
@@ -181,38 +183,26 @@
             aria-labelledby="ex1-tab-1"
           >
           <div class="card-booking-container">
+          <!-- Pending container -->
+            <div id="pending">
+              
+            </div>
+          
+          </div>
+          </div>
 
-            <div class="card text-center">
-              <div class="card-header">Featured</div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                2 days ago
-              </div>
-              <div class="card-footer text-muted">
-                <a href="#" class="btn btn-secondary">Cancel Appointment</a>
-              </div>
-            </div>
-  
-            <div class="card text-center">
-              <div class="card-header">Featured</div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                2 days ago
-              </div>
-              <div class="card-footer text-muted">
-                <a href="#" class="btn btn-secondary">Cancel Appointment</a>
-              </div>
-            </div>
-          </div>
-          </div>
           <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
             Tab 2 content
           </div>
+
           <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-            Tab 3 content
+            <!-- Canceled container -->
+            <div id="canceled">
+              
+            </div>
+
           </div>
+          
           <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
             Tab 4 content
           </div>
@@ -228,6 +218,7 @@
     document.getElementById('date').innerHTML = formattedDate
   </script>
   <script src="{% static 'js/modal_content.js' %}"></script>
+  <script src="{% static 'appointment/appointment.js' %}"></script>
   {% include 'modal/modal.html' %}
 </body>
 </html>

@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('landing_page.urls')),
     path('client_view/', include('client_side.urls')),
-    path('controller/', include('controller.urls'))
+    path('controller/', include('controller.urls')),
+    path('admin_side/', include('admin_side.urls'))
 ]

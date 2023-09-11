@@ -1,0 +1,19 @@
+{% for x in response %}
+  <div class="card text-center">
+    <div class="card-header"></div>
+    <div class="card-body">
+      {% if x.id %}
+        <h5 class="card-title">{{ x.service_name }}</h5>
+        <p class="card-text">Price: ₱{{ x.service_price }}</p>
+        Date: {{ x.appointment_date }} <br> Time: {{ x.appointment_time }}
+      {% else %}
+        <h5 class="card-title">No appointment available.</h5>
+      {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+      {% if x.id %}
+        <a href="#" class="btn btn-secondary" data-mdb-toggle="modal" data-mdb-target="#Modal" onclick="warningModal('{{ x.id }}')">Cancel Appointment</a>
+      {% endif %}
+    </div>
+  </div><br>
+{% endfor %}

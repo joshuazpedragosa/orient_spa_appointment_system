@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from controller.models import authentication
+from controller.models import authentication,services, appointments
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password,check_password
 from django.utils.html import strip_tags
+from datetime import datetime
 import uuid
 import random
 
-# Create your views here.
+# Authentication backend
 @api_view(['POST'])
 def signup(request):
     data = request.data
@@ -94,6 +95,7 @@ def signin(request):
             return Response({'msg': 400, 'email' : user_credentials.first().email})
     
     request.session['v_id'] = user_credentials.first().v_id
+    request.session['priv'] = user_credentials.first().priv
     request.session['first_name'] = user_credentials.first().first_name
     request.session['last_name'] = user_credentials.first().last_name
     request.session['email'] = user_credentials.first().email
@@ -104,10 +106,85 @@ def signin(request):
 @api_view(['POST'])
 def logout(request):
     del request.session['v_id']
+    del request.session['priv']
     del request.session['first_name']
     del request.session['last_name']
     del request.session['email']
     
     return Response({'msg' : 200})
 
+#Appointment backend
+@api_view(['POST'])
+def save_appointment(request):
+    data = request.data
+    time = data['time']
+    time_obj = datetime.strptime(time, '%H:%M')
+    new_time = time_obj.strftime('%I:%M %p')
+    
+    validate_time = appointments.objects.filter(appointment_date = data['date'], appointment_time = new_time)
+    #service = services.objects.filter(id = data['service'])
+    
+    if not validate_time:
+        appointments.objects.create(
+            client_name = request.session['first_name']+' '+request.session['last_name'],
+            client_email = request.session['email'],
+            client_number = data['phone_num'],
+            appointment_date = data['date'],
+            appointment_time = new_time,
+            service_id = data['service'],
+            service_name = 'Head Massage', #service.first().service_name
+            service_price = 450 #service.first().service_price
+        )
+        return Response({'msg' : 200})
+    
+    else:
+        return Response({'msg' : 'Date and time not available'})
+
+@api_view(['POST'])
+def cancel_appointment(request):
+    data = request.data
+    html_message = render_to_string('email_template/cancelation.html', {'msg': data['reason']})
+    plain_message = strip_tags(html_message)
+            
+    sent_count =send_mail(
+    "Orient SPA Calapan",
+    plain_message,
+    settings.EMAIL_HOST_USER,
+    [request.session['email']],
+    fail_silently=False,
+    html_message=html_message
+    )      
+    if sent_count == 1:
+        appointment = appointments.objects.get(id = data['id'])
+        appointment.appointment_status = 'Canceled'
+        appointment.save()
+        return Response({'msg': 200})
+
+def display_pending_appointment(request):
+    email = request.session['email']
+    pending = appointments.objects.filter(client_email = email, appointment_status = 'Pending')
+    return render(request, 'appointment/pending_appointments.html', {'response' : pending})
+
+def display_canceled_appointment(request):
+    email = request.session['email']
+    canceled = appointments.objects.filter(client_email = email, appointment_status = 'Canceled')
+    return render(request, 'appointment/canceled_appointment.html', {'response' : canceled})
+
+
 #Modal controls
+def modal_content(request):
+    service = services.objects.all()
+    return render(request, 'modal_content.html', {'services' : service})
+
+@api_view(['POST'])
+def save_service(request):
+    data = request.data
+    
+    services.objects.create(
+        service_name = data['service_name'],
+        service_price = data['price'],
+        service_img = data['img'],
+        service_description = data['description']
+    )
+    
+    return Response({'msg' : 200})

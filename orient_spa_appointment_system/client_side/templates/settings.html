@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login|Signup</title>
+    <title>Settings | {{request.session.first_name}} {{request.session.last_name}}</title>
    <!-- Font Awesome -->
     <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -41,19 +41,14 @@
                 <button class="btn btn-danger" onclick="logout()" data-mdb-toggle="modal" data-mdb-target="#Modal" type="button">Logout</button>
             <div>
           </div>
-          <a
-            href="{% url 'home' %}"
-            class="list-group-item list-group-item-action py-2 ripple"
-            aria-current="true"
-          >
-            <i class="fas fa-home-alt fa-fw me-3"></i><span>Home</span>
-          </a>
-          <a href="{% url 'appointment' %}" class="list-group-item list-group-item-action py-2 ripple"
-            ><i class="fas fa-calendar fa-fw me-3"></i><span>Appointments</span></a
-          >
+          {% if request.session.priv == 1 %}
+              {% include 'navbar/admin_navbar.html' %}
+          {% elif request.session.priv == 2 %}
+              {% include 'navbar/client_navbar.html' %}
+          {% endif %}
           <a href="{% url 'services' %}" class="list-group-item list-group-item-action py-2 ripple"
             ><i class="fas fa-file fa-fw me-3"></i><span>Services</span></a
-          >
+            >
           <a href="{% url 'chat' %}" class="list-group-item list-group-item-action py-2 ripple"
             ><i class="fas fa-envelope fa-fw me-3"></i><span>Chat</span></a
           >

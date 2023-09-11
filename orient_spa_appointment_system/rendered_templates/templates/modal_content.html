@@ -1,0 +1,35 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Appointment</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+
+    <div class="form-outline">
+        <input type="number" id="phoneNumber" class="form-control border-dark" />
+        <label class="form-label" for="typeNumber">Phone Number</label>
+    </div>
+
+    <div class="form-outline">
+        <input type="Date" id="appointmentDate" class="form-control" />
+        <input type="Time" id="time" class="form-control" />
+    </div>
+
+    <div class="form-outline">
+        <select id="services" class="form-control">
+            <option value=""></option>
+            {% for x in services %}
+                <option value="{{x.id}}">{{x.service_name}}</option>
+            {% endfor %}
+        </select>
+        <label class="form-label" for="services">Choose Service</label>
+    </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeModal" data-mdb-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveAppointment()">Save</button>
+    </div>
+    </div>
+</div>
