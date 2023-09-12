@@ -122,7 +122,7 @@ def save_appointment(request):
     new_time = time_obj.strftime('%I:%M %p')
     
     validate_time = appointments.objects.filter(appointment_date = data['date'], appointment_time = new_time)
-    #service = services.objects.filter(id = data['service'])
+    service = services.objects.filter(id = data['service'])
     
     if not validate_time:
         appointments.objects.create(
@@ -132,8 +132,8 @@ def save_appointment(request):
             appointment_date = data['date'],
             appointment_time = new_time,
             service_id = data['service'],
-            service_name = 'Head Massage', #service.first().service_name
-            service_price = 450 #service.first().service_price
+            service_name = service.first().service_name,
+            service_price = service.first().service_price
         )
         return Response({'msg' : 200})
     
@@ -176,15 +176,20 @@ def modal_content(request):
     service = services.objects.all()
     return render(request, 'modal_content.html', {'services' : service})
 
-@api_view(['POST'])
+def modal_service(request):
+    return render(request, 'modal_service.html')
+
+
+def service_content(request):
+    service = services.objects.all()
+    return render(request, 'services_templates/service_content.html', {'services' : service})
+
 def save_service(request):
-    data = request.data
-    
     services.objects.create(
-        service_name = data['service_name'],
-        service_price = data['price'],
-        service_img = data['img'],
-        service_description = data['description']
+        service_name = request.POST['service_name'],
+        service_price = request.POST['price'],
+        service_img = request.FILES['img'],
+        service_description = request.POST['description']
     )
     
-    return Response({'msg' : 200})
+    return render(request, 'services.html', {'msg' : 'Service saved!'})

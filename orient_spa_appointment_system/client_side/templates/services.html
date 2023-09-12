@@ -26,7 +26,6 @@
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
     ></script>
-    <script src="{% static 'services/services.js' %}"></script>
 </head>
 <body class="is-boxed has-animations">
    <!--Main Navigation-->
@@ -110,83 +109,38 @@
         </a>
       {% endif %}
       <div style="margin: 2rem;">
-        <div class="row">
-          
-
-            <div class="col-sm-6">
-                <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img
-                          src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                          alt="Trendy Pants and Shoes"
-                          class="img-fluid rounded-start"
-                        />
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Head Massage</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
-                          </p>
-                          <p class="card-text">
-                            <small class="text-muted">1.7K ratings</small>
-                          </p>
-                          <p class="card-text">
-                            <small class="text-muted">4.4</small>
-                            <span class="fa fa-star checked" style="color: orange;"></span>
-                            <span class="fa fa-star checked" style="color: orange;"></span>
-                            <span class="fa fa-star checked" style="color: orange;"></span>
-                            <span class="fa fa-star" style="color: orange;"></span>
-                            <span class="fa fa-star"></span>
-                          </p>
-                          <p class="card-text">
-                            <button type="button" class="btn btn-primary">
-                                Comments <span class="badge badge-primary ms-2">9</span>
-                                <span class="visually-hidden">unread messages</span>
-                            </button>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-            </div>
-            
-
-            <div class="col-sm-6">
-              <div class="card mb-3" style="max-width: 540px;">
-                  <div class="row g-0">
-                    <div class="col-md-4">
-                      <img
-                        src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                        alt="Trendy Pants and Shoes"
-                        class="img-fluid rounded-start"
-                      />
-                    </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">
-                          This is a wider card with supporting text below as a natural lead-in to
-                          additional content. This content is a little bit longer.
-                        </p>
-                        <p class="card-text">
-                          <small class="text-muted">Last updated 3 mins ago</small>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-          </div>
+        <div class="row" id="allServices">
+        
           
 
 
-          </div>
+        </div>
       </div>
+    </div>
     </div>
   </main>
   <!--Main layout-->
+  <script>
+    const button = document.querySelector("button"),
+      toast = document.querySelector(".toast")
+      closeIcon = document.querySelector(".close"),
+      progress = document.querySelector(".progress");
+    function click(){
+      toast.classList.add("active");
+      progress.classList.add("active");
+
+      timer1 = setTimeout(() => {
+          toast.classList.remove("active");
+      }, 5000); //1s = 1000 milliseconds
+
+      timer2 = setTimeout(() => {
+        progress.classList.remove("active");
+      }, 5300);
+
+      console.log('test')
+    }
+  </script>
+  <script src="{% static 'services/services.js' %}"></script>
   <script src="{% static 'js/modal_content.js' %}"></script>
   {% include 'modal/modal.html' %}
 </body>

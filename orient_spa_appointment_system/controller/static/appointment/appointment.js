@@ -55,7 +55,7 @@ function saveAppointment(){
         phone_num : document.getElementById('phoneNumber').value,
         date : document.getElementById('appointmentDate').value,
         time : document.getElementById('time').value,
-        service : 1//"document.getElementById('services').value",
+        service : document.getElementById('services').value
     }
 
     if(appointment_data.phone_num === '' || appointment_data.date === '' || appointment_data.time === '' || appointment_data.service === ''){

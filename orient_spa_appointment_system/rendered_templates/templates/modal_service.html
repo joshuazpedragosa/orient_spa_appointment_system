@@ -1,0 +1,46 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Service</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="POST" action="/controller/save_service/" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div class="modal-body">
+    <span style="color: red;" id="errmsg"></span>
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+            <img
+            src="#"
+            alt="Service"
+            class="img-fluid rounded"
+            style="width: 20%;"
+            id="img"
+            />
+        </div>
+        <div class="form-outline">
+        <input type="file" onchange="viewImg()" id="imgInp" name="img" style="border: 1px solid gray;" accept="image/png, image/gif, image/jpeg" class="form-control" required/>
+        </div><br>
+
+        <div class="form-outline">
+        <input type="text" name="service_name" style="border: 1px solid gray;" class="form-control" required/>
+        <label class="form-label" for="service_namet">Service Name</label>
+        </div><br>
+
+        <div class="form-outline">
+        <input type="number" name="price" style="border: 1px solid gray;" class="form-control" required/>
+        <label class="form-label" for="price">Price</label>
+        </div><br>
+
+        <div class="form-outline">
+        <textarea class="form-control" name="description" style="border: 1px solid gray;" rows="4" required></textarea>
+        <label class="form-label" for="description">Description</label>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+    </form>
+    </div>
+</div>
