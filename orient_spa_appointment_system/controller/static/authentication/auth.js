@@ -110,7 +110,8 @@ signin.addEventListener('click', function(event){
         'l_name' : document.getElementById('l_name').value,
         'email' : document.getElementById('email').value,
         'password' : document.getElementById('pass').value,
-        'c_password' : document.getElementById('c_pass').value
+        'c_password' : document.getElementById('c_pass').value,
+        'priv' : '2'
     }
 
     let auth = new authentication(object)

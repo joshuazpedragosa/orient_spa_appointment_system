@@ -27,8 +27,23 @@ def signup(request):
         return Response({'msg' : 'Passwords dont match'})
     elif len(data['password']) < 8:
         return Response({'msg' : 'Password requires 8 characters'})
-  
-    html_message = render_to_string('email.html', {'code': random_code})
+    
+    
+    if data['priv'] == '2':
+        html_message = render_to_string('email.html', 
+                                        {'header': 'Verification code', 
+                                         'title': 'Do not share This code to anyone.',
+                                         'text': 'Thank you for supporting Orient SPA! This is your account verification code.',
+                                         'code': random_code}
+                                        )
+    else:
+        html_message = render_to_string('email.html', 
+                                        {'header': 'Orient SPA Employment',
+                                         'title': 'Orient SPA Account for Employee',
+                                         'text': 'You are added as employee at Orient SPA! Use this email to login.',
+                                         'code': ''
+                                         }
+                                        )
     plain_message = strip_tags(html_message)
         
     sent_count =send_mail(
@@ -42,6 +57,7 @@ def signup(request):
     if sent_count == 1:    
         authentication.objects.create(
             v_id = unique_id,
+            priv = int(data['priv']),
             first_name =  data['f_name'],
             last_name = data['l_name'],
             email = data['email'],

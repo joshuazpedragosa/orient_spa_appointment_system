@@ -9,15 +9,16 @@
         font-size: 25px;
         font-family: 'Lucida Console', 'Courier New', monospace;
     ">
-        <div class="card-header">Verification code</div>
+        <div class="card-header">{{header}}</div>
         <div class="card-body">
-          <h5 class="card-title">Do not share This code to anyone.</h5>
-          <p class="card-text">Thank you for supporting Orient SPA! This is your account verification code.</p>
+          <h5 class="card-title">{{title}}</h5>
+          <p class="card-text">{{text}}</p>
           <h3>{{code}}</h3>
         </div>
         <small style="
             font-size: 18px;
         ">
-            @orientspacalapancity
+            @orientspacalapancity<br>
+            <a href="http://127.0.0.1:8000/">Orient SPA Appointment System</a>
         </small>
     </div>

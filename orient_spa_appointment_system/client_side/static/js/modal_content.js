@@ -18,6 +18,62 @@ function NewAppointment(){
 }
 
 
+function addEmployeeModal(){
+    let modal_emp = `<div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Add Employee</h5>
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                        <div class="modal-body">
+                            
+                        <div class="input-group rounded mb-2">
+                            <input type="text" class="form-control rounded" id="f_name" placeholder="First Name" aria-label="Search" aria-describedby="search-addon" required />
+                        </div>
+                            
+                        <div class="input-group rounded mb-2">
+                            <input type="text" class="form-control rounded" id="l_name" placeholder="Last Name" aria-label="Search" aria-describedby="search-addon" required />
+                        </div>
+
+                        <div class="input-group rounded mb-2">
+                            <input type="email" class="form-control rounded" id="email" placeholder="Email" aria-label="Search" aria-describedby="search-addon" required />
+                        </div>
+
+                        <div class="input-group rounded mb-2">
+                            <input type="text" class="form-control rounded" id="empPass" value="orientspa_new_employee" placeholder="Password" aria-label="Search" aria-describedby="search-addon" required />
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" onchange="hidePass()" value="" id="flexCheckChecked" checked/>
+                            <label class="form-check-label" for="flexCheckChecked">Show Password</label>
+                        </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                            <button type="submit" onclick="submitEmployee()" class="btn btn-primary">Add</button>
+                        </div>
+                        </form>
+                        </div>
+                    </div>`;
+
+    document.getElementById('Modal').innerHTML = modal_emp;
+}
+
+function hidePass(){
+    let input = document.getElementById('empPass');
+
+    if (input.type === 'text'){
+        input. type = 'password'
+    }
+    else{
+    input.type = 'text'
+    }
+}
+
+
 function logout(){
     let modal_logout = `<div class="modal-dialog">
                         <div class="modal-content">

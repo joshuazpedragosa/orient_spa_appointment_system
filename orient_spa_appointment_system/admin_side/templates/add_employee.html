@@ -107,7 +107,7 @@
           Employee
         </h4>
       </div>
-      <a class="btn text-white mb-4 mt-2" align="right" style="background-color: #55acee;" href="#!" role="button">
+      <a class="btn text-white mb-4 mt-2" onclick="addEmployeeModal()" data-mdb-toggle="modal" data-mdb-target="#Modal" style="background-color: #55acee;" href="#!" role="button">
         <i class="fas fa-user-plus me-2"></i>
         Add Employee
       </a>
@@ -146,6 +146,7 @@
   </main>
   <!--Main layout-->
   <script src="{% static 'js/modal_content.js' %}"></script>
+  <script src="{% static 'employee/employee.js' %}"></script>
   {% include 'modal/modal.html' %}
 </body>
 </html>
