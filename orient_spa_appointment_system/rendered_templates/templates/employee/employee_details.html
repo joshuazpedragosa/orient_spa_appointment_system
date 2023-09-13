@@ -1,0 +1,86 @@
+<div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Employees</h5>
+            <table class="table">
+              <thead>
+                <tr>                  
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for x in emp %}
+                        <tr>
+                            <td>{{x.first_name}}</td>
+                            <td>{{x.last_name}}</td>
+                            <td>
+                                <button type="button" onclick="setDtr('{{x.v_id}}')" class="btn btn-info btn-sm">DTR</button>
+                            </td>
+                        </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">DTR(Daily Time Record)</h5>
+            <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+                <h5><i class="fas fa-calendar-alt"></i> <span id="date"></span></h5>
+            </div>
+            <table id="dtrTbl" class="table table-bordered border-primary">
+              <thead>
+                <tr align="center">
+                  <th></th>
+                  <th colspan="2">AM</th>
+                  <th colspan="2">PM</th>
+                </tr>
+                <tr>
+                  <th>Last Name</th>
+                  <th>In</th>
+                  <th>Out</th>
+                  <th>In</th>
+                  <th>Out</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for x in dtr %}
+                    {% for record  in emp %}
+                        {% if record.v_id == x.employee_vid %}
+                            <tr>
+                                <td>{{record.last_name}}</td>
+                              {% if x.am_in|slice:":2"|add:0 >= 8 %}
+                                <td style="color:red;">{{x.am_in}}</td>
+                              {% else %}
+                                <td>{{x.am_in}}</td>
+                              {% endif %}
+                              {% if x.am_out|slice:":2"|add:0 < 12 %}
+                                <td style="color: red;">{{x.am_out}}</td>
+                              {% else %}
+                                <td>{{x.am_out}}</td>
+                              {% endif %}
+                              {% if x.pm_in|slice:":2"|add:0 >= 1 and x.pm_in|slice:":2"|add:0 < 12 %}
+                                <td style="color: red;">{{x.pm_in}}</td>
+                              {% else %}
+                                <td>{{x.pm_in}}</td>
+                              {% endif %}
+                              {% if x.pm_out|slice:":2"|add:0 < 5 %}
+                                <td style="color: red;">{{x.pm_out}}</td>
+                              {% else %}
+                                <td>{{x.pm_out}}</td>
+                              {% endif %}
+                            </tr> 
+                        {% endif %}
+                    {% endfor %}            
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>

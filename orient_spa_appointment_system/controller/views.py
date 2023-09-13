@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from controller.models import authentication,services, appointments
+from controller.models import authentication,services, appointments,dtr_record
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -40,7 +40,7 @@ def signup(request):
         html_message = render_to_string('email.html', 
                                         {'header': 'Orient SPA Employment',
                                          'title': 'Orient SPA Account for Employee',
-                                         'text': 'You are added as employee at Orient SPA! Use this email to login.',
+                                         'text': 'You are added as employee at Orient SPA! Use this email to login. Password : '+data['password'],
                                          'code': ''
                                          }
                                         )
@@ -209,3 +209,77 @@ def save_service(request):
     )
     
     return render(request, 'services.html', {'msg' : 'Service saved!'})
+
+
+#Employee details rendering
+
+def employee_details(request):
+    employee = authentication.objects.filter(priv = 3)
+    dtr = dtr_record.objects.all()
+    
+    return render(request, 'employee/employee_details.html', {'emp' : employee, 'dtr' : dtr})
+
+
+#Employee backend (DTR Control)
+
+@api_view(['POST'])
+def insert_dtr(request):
+    data = request.data
+    
+    record = dtr_record.objects.filter(employee_vid = data['emp_vid'], date = data['date']).values()
+    
+    if not record and data['dtr_type'] == 'morning':
+        dtr_record.objects.create(
+            employee_vid = data['emp_vid'],
+            am_in = data['time'],
+            date = data['date']
+        )
+        
+        return Response({'msg' : 200})
+    
+    elif not record and data['dtr_type'] == 'afternoon':
+        dtr_record.objects.create(
+            employee_vid = data['emp_vid'],
+            pm_in = data['time'],
+            date = data['date']
+        )
+        
+        return Response({'msg' : 200})
+    
+    elif record and data['dtr_type'] == 'morning' or record and data['hour'] == 12 and data['minutes'] <= 30:
+        for x in record:
+            am_time_out = x['am_out']
+            
+            if am_time_out == '':
+                update_dtr = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtr.am_out = data['time']
+                update_dtr.save()
+                
+                return Response({'msg' : 200})
+            else:
+                return Response({'msg' : 'You have already used DTR. Please wait for the afternoon time in record.'})
+    
+    elif record and data['dtr_type'] == 'afternoon':
+        for y in record:
+            pm_time_in = y['pm_in']
+            pm_time_out = y['pm_out']
+            
+            if pm_time_in == '' and pm_time_out == '':
+                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtrpm.pm_in = data['time']
+                update_dtrpm.save()
+                
+                return Response({'msg' : 200})
+            
+            elif pm_time_in != '' and pm_time_out == '':
+                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtrpm.pm_out = data['time']
+                update_dtrpm.save()
+                
+                return Response({'msg' : 200})
+            
+            else:
+                return Response({'msg' : 'You have already used DTR. Please wait for tomorrow time in record.'})
+    
+    else:
+        return Response({'msg' : 'Cannot use DTR at the moment. Please try again later'})

@@ -37,3 +37,14 @@ class appointments(models.Model):
     
     class Meta: 
         db_table = 'tbl_appointment'
+        
+class dtr_record(models.Model):
+    employee_vid = models.CharField(max_length=200, null=False, default='')
+    am_in = models.CharField(max_length=20, null=True, default='')
+    am_out = models.CharField(max_length=20, null=True, default='')
+    pm_in = models.CharField(max_length=20, null=True, default='')
+    pm_out = models.CharField(max_length=20, null=True, default='')
+    date = models.CharField(max_length=20, null=True, default='')
+    
+    class Meta:
+        db_table = 'tbl_dtr'

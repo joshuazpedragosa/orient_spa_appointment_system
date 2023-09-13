@@ -26,7 +26,6 @@ function addEmployeeModal(){
                             <h5 class="modal-title" id="exampleModalLabel"></h5>
                             <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form>
                         <div class="modal-body">
                             
                         <div class="input-group rounded mb-2">
@@ -53,9 +52,8 @@ function addEmployeeModal(){
                         </div>
                         <div class="modal-footer">
                             <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                            <button type="submit" onclick="submitEmployee()" class="btn btn-primary">Add</button>
+                            <button type="button" onclick="submitEmployee()" class="btn btn-primary">Add</button>
                         </div>
-                        </form>
                         </div>
                     </div>`;
 
