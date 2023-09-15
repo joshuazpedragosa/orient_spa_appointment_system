@@ -49,6 +49,7 @@
                 </tr>
               </thead>
               <tbody>
+                {% if dtr %}
                 {% for x in dtr %}
                     {% for record  in emp %}
                         {% if record.v_id == x.employee_vid %}
@@ -74,10 +75,15 @@
                               {% else %}
                                 <td>{{x.pm_out}}</td>
                               {% endif %}
-                            </tr> 
+                            </tr>
                         {% endif %}
-                    {% endfor %}            
+                    {% endfor %}        
                 {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="5">No record found.</td>
+                  </tr>
+                {% endif %}
               </tbody>
             </table>
         </div>

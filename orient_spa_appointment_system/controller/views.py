@@ -214,8 +214,9 @@ def save_service(request):
 #Employee details rendering
 
 def employee_details(request):
+    date = request.GET['a']
     employee = authentication.objects.filter(priv = 3)
-    dtr = dtr_record.objects.all()
+    dtr = dtr_record.objects.filter(date = date).values()
     
     return render(request, 'employee/employee_details.html', {'emp' : employee, 'dtr' : dtr})
 

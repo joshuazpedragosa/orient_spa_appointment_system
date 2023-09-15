@@ -6,7 +6,6 @@ const day = currentDate.getDate();
 const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
 
-
 function Spinner(){
     let spinner = `
                      <div style="display: flex; justify-content: center; margin-top: 20rem; overflow: hidden;">
@@ -35,7 +34,7 @@ class employee{
         })
         .then(respose => respose.json())
         .then(data => {
-            data['msg'] === 200 ? DisplayEmployee() : alert(data['msg'])
+            data['msg'] === 200 ? DisplayEmployee(formattedDate) : alert(data['msg'])
             document.getElementById('closeModal').click()
         })
         .catch(error => {
@@ -53,7 +52,7 @@ class employee{
         })
         .then(respose => respose.json())
         .then(data => {
-            data['msg'] === 200 ? DisplayEmployee() : alert(data['msg'])
+            data['msg'] === 200 ? DisplayEmployee(formattedDate) : alert(data['msg'])
         })
         .catch(error => {
             console.error('api error: ',error)
@@ -83,11 +82,11 @@ function submitEmployee(){
 }
 
 window.onload =()=>{
-    DisplayEmployee()
+    DisplayEmployee(formattedDate)
 }
 
-function DisplayEmployee(){
-    fetch('/controller/employee_details/?a=')
+function DisplayEmployee(date){
+    fetch('/controller/employee_details/?a='+date)
     .then((response) => {
         if(!response.ok){
             throw new Error('Network response unstable.')
@@ -96,7 +95,7 @@ function DisplayEmployee(){
     })
     .then((html) => {
         document.getElementById('employee_cards').innerHTML = html;
-        document.getElementById('date').innerHTML = formattedDate
+        document.getElementById('date').innerHTML = date
     })
     .catch(error => {
         console.error('API Error: ', error)
@@ -144,5 +143,17 @@ function setDtr(data){
     }
     else{
         alert('Something went wrong! Please try again.test')
+    }
+}
+
+function chooseDate(){
+    let datechosen =  document.getElementById('choosedate').value;
+
+    if(new Date() < new Date(datechosen)){
+        alert('No record for this date!')
+    }
+    else{
+        DisplayEmployee(datechosen)
+        document.getElementById('date').innerHTML = datechosen
     }
 }
