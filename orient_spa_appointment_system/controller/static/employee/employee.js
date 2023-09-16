@@ -5,7 +5,6 @@ const month = currentDate.getMonth() + 1;
 const day = currentDate.getDate();
 const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
-
 function Spinner(){
     let spinner = `
                      <div style="display: flex; justify-content: center; margin-top: 20rem; overflow: hidden;">
@@ -59,6 +58,27 @@ class employee{
             alert('Something went wrong! Please try again')
         })
     }
+
+    delete(){
+        fetch('/controller/delete_employee/',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.object)
+        })
+        .then(respose => respose.json())
+        .then(data => {
+            data['msg'] === 200 ? DisplayEmployee(formattedDate) : document.getElementById('errmsg').innerHTML = data['msg']
+            if (data['msg'] === 200) {
+                document.getElementById('closeModal').click()
+            }
+        })
+        .catch(error => {
+            console.error('api error: ',error)
+            alert('Something went wrong! Please try again')
+        })
+    }
 }
 
 function submitEmployee(){
@@ -85,6 +105,10 @@ window.onload =()=>{
     DisplayEmployee(formattedDate)
 }
 
+function Return(){
+    DisplayEmployee(formattedDate)
+}
+
 function DisplayEmployee(date){
     fetch('/controller/employee_details/?a='+date)
     .then((response) => {
@@ -96,6 +120,23 @@ function DisplayEmployee(date){
     .then((html) => {
         document.getElementById('employee_cards').innerHTML = html;
         document.getElementById('date').innerHTML = date
+    })
+    .catch(error => {
+        console.error('API Error: ', error)
+        alert('Something went wrong!')
+    })
+}
+
+function DisplayDTR(id){
+    fetch('/controller/employee_dtr/?a='+id)
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text();
+    })
+    .then((html) => {
+        document.getElementById('employee_cards').innerHTML = html;
     })
     .catch(error => {
         console.error('API Error: ', error)
@@ -140,6 +181,7 @@ function setDtr(data){
         }
         const newDtr = new employee(dtrObject)
         newDtr.new_dtr()
+        // alert(JSON.stringify(dtrObject))
     }
     else{
         alert('Something went wrong! Please try again.test')
@@ -155,5 +197,54 @@ function chooseDate(){
     else{
         DisplayEmployee(datechosen)
         document.getElementById('date').innerHTML = datechosen
+    }
+}
+
+function searchTable(){
+    const tbl_row = document.getElementsByTagName('tr')
+    const searchBox = document.getElementById('searchBox')
+
+    const searchtxt = searchBox.value.toLowerCase();
+
+    for(let i = 1; i < tbl_row.length; i++){
+        const row = tbl_row[i];
+        const rowData = row.getElementsByTagName('td');
+        let matchFound = false;
+
+        for (let x = 0; x < rowData.length; x++){
+            const cellData = rowData[x].textContent.toLowerCase();
+
+            if(cellData.includes(searchtxt)){
+                matchFound = true;
+                break;
+            }
+        }
+
+        if (matchFound) {
+            row.style.display = '';
+            document.getElementById('trDtr').style.display = '';
+            document.getElementById('trDtr1').style.display = '';
+        } else {
+            row.style.display = 'none';
+            document.getElementById('trDtr').style.display = '';
+            document.getElementById('trDtr1').style.display = '';
+        }
+    }
+}
+
+function deleteEmp(id){
+    let adminpass = document.getElementById('adminPass')
+    let errmsg = document.getElementById('errmsg')
+    let data = {
+        u_id : id,
+        adminpass : adminpass.value
+    }
+
+    if (data.adminpass == ''){
+        errmsg.innerHTML = 'Please confirm your password.'
+    }
+    else{
+        const newdelete = new employee(data)
+        newdelete.delete()
     }
 }

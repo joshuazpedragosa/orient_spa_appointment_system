@@ -252,7 +252,7 @@ def insert_dtr(request):
             am_time_out = x['am_out']
             
             if am_time_out == '':
-                update_dtr = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtr = dtr_record.objects.get(employee_vid = data['emp_vid'], date = data['date'])
                 update_dtr.am_out = data['time']
                 update_dtr.save()
                 
@@ -266,14 +266,14 @@ def insert_dtr(request):
             pm_time_out = y['pm_out']
             
             if pm_time_in == '' and pm_time_out == '':
-                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'], date = data['date'])
                 update_dtrpm.pm_in = data['time']
                 update_dtrpm.save()
                 
                 return Response({'msg' : 200})
             
             elif pm_time_in != '' and pm_time_out == '':
-                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'])
+                update_dtrpm = dtr_record.objects.get(employee_vid = data['emp_vid'], date = data['date'])
                 update_dtrpm.pm_out = data['time']
                 update_dtrpm.save()
                 
@@ -284,3 +284,32 @@ def insert_dtr(request):
     
     else:
         return Response({'msg' : 'Cannot use DTR at the moment. Please try again later'})
+
+#remove employee
+@api_view(['POST'])
+def delete_employee(request):
+    data = request.data
+    
+    confirm_admin = authentication.objects.filter(v_id = request.session['v_id']).values()
+    employee = authentication.objects.filter(v_id = data['u_id'])
+    
+    for admin in confirm_admin:
+        password = admin['password']
+        
+        if check_password(data['adminpass'], password):
+           if employee.exists():
+                employee.delete()
+                return Response({'msg' : 200})
+           else:
+                return Response({'msg' : 'Employee not found.'})
+        else:
+            return Response({'msg' : 'Incorrect Password'})
+        
+#display employee dtr card
+def employee_dtr(request):
+    v_id = request.GET['a']
+    employee = authentication.objects.filter(v_id = v_id).values()
+    dtr_rec = dtr_record.objects.filter(employee_vid = v_id).values()
+    
+    
+    return render(request, 'employee/dtr_records.html', {'emp' : employee, 'dtr' : dtr_rec})

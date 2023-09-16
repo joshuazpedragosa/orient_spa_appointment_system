@@ -3,7 +3,13 @@
       <div class="card">
         <div class="card-body">
             <h5 class="card-title">Employees</h5>
-            <table class="table">
+            <div class="input-group rounded w-50 mb-2 float-end" align="right">
+              <input type="text" id="searchBox" class="form-control rounded" onkeyup="searchTable()" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+              <span class="input-group-text border-0"  onclick="Resettemplate()" id="search-addon">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+            <table id="EmployeeTbl" class="table">
               <thead>
                 <tr>                  
                   <th scope="col">First Name</th>
@@ -17,7 +23,23 @@
                             <td>{{x.first_name}}</td>
                             <td>{{x.last_name}}</td>
                             <td>
-                                <button type="button" onclick="setDtr('{{x.v_id}}')" class="btn btn-info btn-sm">DTR</button>
+                                <div class="dropdown">
+                                  <button type="button" onclick="setDtr('{{x.v_id}}')" class="btn btn-info btn-sm">DTR</button>
+                                  <button
+                                    class="btn btn-warning btn-sm dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    data-mdb-toggle="dropdown"
+                                    aria-expanded="false"
+                                  >
+                                    More
+                                  </button>
+                                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#" onclick="DisplayDTR('{{x.v_id}}')">View DTR</a></li>
+                                    <li><a class="dropdown-item" href="#">Monthly Rate</a></li>
+                                    <li><a class="dropdown-item text-danger" onclick="showDeleteEmpModal('{{x.v_id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Delete Account</a></li>
+                                  </ul>
+                                </div>
                             </td>
                         </tr>
                 {% endfor %}
@@ -35,17 +57,17 @@
             </div>
             <table id="dtrTbl" class="table table-bordered border-primary">
               <thead>
-                <tr align="center">
+                <tr id="trDtr" align="center">
                   <th></th>
                   <th colspan="2">AM</th>
                   <th colspan="2">PM</th>
                 </tr>
-                <tr>
-                  <th>Last Name</th>
-                  <th>In</th>
-                  <th>Out</th>
-                  <th>In</th>
-                  <th>Out</th>
+                <tr id="trDtr1">
+                  <th scope="col">Last Name</th>
+                  <th scope="col">In</th>
+                  <th scope="col">Out</th>
+                  <th scope="col">In</th>
+                  <th scope="col">Out</th>
                 </tr>
               </thead>
               <tbody>

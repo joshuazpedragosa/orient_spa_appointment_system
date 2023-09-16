@@ -18,6 +18,29 @@ function NewAppointment(){
 }
 
 
+function showDeleteEmpModal(id){
+    let modal_deleteEmp = `<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <h4><i class="fas fa-warning ms-1 text-warning"></i> Delete Employee?</h4>
+        <h6>Please input your password to confirm deletion.</h6>
+        <p id="errmsg" class="text-danger"></p>
+        <input type="password" id="adminPass" class="form-control rounded" placeholder="Password" />
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <button type="button" onclick="deleteEmp('${id}')" class="btn btn-danger">Delete</button>
+    </div>
+    </div>
+    </div>`;
+
+    document.getElementById('Modal').innerHTML = modal_deleteEmp;
+}
+
 function addEmployeeModal(){
     let modal_emp = `<div class="modal-dialog">
                         <div class="modal-content">

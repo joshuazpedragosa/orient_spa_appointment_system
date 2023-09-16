@@ -1,0 +1,77 @@
+<div class="card">
+    <div class="card-body">
+        <button type="button" onclick="Return()" class="btn btn-outline-secondary" data-mdb-ripple-color="#32b4ec"><i class="fas fa-angle-left"></i> back </button>
+        <h5 class="card-title">DTR(Daily Time Record)</h5>
+        <div class="input-group rounded w-25 mb-2 float-end" align="right">
+          <input type="text" id="searchBox" class="form-control rounded" onkeyup="searchTable()" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+              <span class="input-group-text border-0"  onclick="Resettemplate()" id="search-addon">
+                <i class="fas fa-search"></i>
+              </span>
+          <select class="form-control rounded">
+                <option value="" class="text-primary">Choose Month</option>
+                <option value="">January</option>
+                <option value="">February</option>
+                <option value="">March</option>
+                <option value="">April</option>
+                <option value="">May</option>
+                <option value="">June</option>
+                <option value="">July</option>
+                <option value="">August</option>
+                <option value="">September</option>
+                <option value="">October</option>
+                <option value="">November</option>
+                <option value="">December</option>
+         </select>
+        </div>
+        <table id="dtrTbl" class="table table-bordered border-primary">
+          <thead>
+            <tr>
+              <th colspan="5">
+                {% for n in emp %}
+                 <h4>Fullname: {{n.first_name}} {{n.last_name}} </h4>
+                {% endfor %}
+              </th>
+            </tr>
+            <tr id="trDtr" align="center">
+              <th></th>
+              <th colspan="2">AM</th>
+              <th colspan="2">PM</th>
+            </tr>
+            <tr id="trDtr1">
+              <th>Date</th>
+              <th>In</th>
+              <th>Out</th>
+              <th>In</th>
+              <th>Out</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for x in dtr %}
+                <tr>
+                    <td>{{x.date}}</td>
+                  {% if x.am_in|slice:":2"|add:0 >= 8 %}
+                    <td style="color:red;">{{x.am_in}}</td>
+                  {% else %}
+                    <td>{{x.am_in}}</td>
+                  {% endif %}
+                  {% if x.am_out|slice:":2"|add:0 < 12 %}
+                    <td style="color: red;">{{x.am_out}}</td>
+                  {% else %}
+                    <td>{{x.am_out}}</td>
+                  {% endif %}
+                  {% if x.pm_in|slice:":2"|add:0 >= 1 and x.pm_in|slice:":2"|add:0 < 12 %}
+                    <td style="color: red;">{{x.pm_in}}</td>
+                  {% else %}
+                    <td>{{x.pm_in}}</td>
+                  {% endif %}
+                  {% if x.pm_out|slice:":2"|add:0 < 5 %}
+                    <td style="color: red;">{{x.pm_out}}</td>
+                  {% else %}
+                    <td>{{x.pm_out}}</td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  </div>
