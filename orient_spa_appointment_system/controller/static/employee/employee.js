@@ -5,6 +5,7 @@ const month = currentDate.getMonth() + 1;
 const day = currentDate.getDate();
 const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
+
 function Spinner(){
     let spinner = `
                      <div style="display: flex; justify-content: center; margin-top: 20rem; overflow: hidden;">
@@ -127,21 +128,38 @@ function DisplayEmployee(date){
     })
 }
 
+let get_month = month
+let get_year = year
+let user_vid = ""
+
+function selectMonth(){
+    get_month = document.getElementById('monthSelect').value;
+    get_year = document.getElementById('dateInput').value;
+
+    DisplayDTR(user_vid)
+}
+
 function DisplayDTR(id){
-    fetch('/controller/employee_dtr/?a='+id)
-    .then((response) => {
-        if(!response.ok){
-            throw new Error('Network response unstable.')
-        }
-        return response.text();
-    })
-    .then((html) => {
-        document.getElementById('employee_cards').innerHTML = html;
-    })
-    .catch(error => {
-        console.error('API Error: ', error)
+    user_vid = id
+    if(user_vid !== '' && get_month !== ''){
+        fetch('/controller/employee_dtr/?a='+user_vid+'&&b='+get_month+'&&c='+get_year)
+        .then((response) => {
+            if(!response.ok){
+                throw new Error('Network response unstable.')
+            }
+            return response.text();
+        })
+        .then((html) => {
+            document.getElementById('employee_cards').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('API Error: ', error)
+            alert('Something went wrong!')
+        })
+    }
+    else{
         alert('Something went wrong!')
-    })
+    }
 }
 
 function setDtr(data){
@@ -247,4 +265,25 @@ function deleteEmp(id){
         const newdelete = new employee(data)
         newdelete.delete()
     }
+}
+
+function printTbl() {
+    let tbl = document.getElementById('dtrTbl')
+    
+    var printWindow = window.open('', '', 'width=600,height=600');
+    
+    printWindow.document.open();
+    printWindow.document.write('<html><head><title>DTR(Daily Time Record)</title></head><body>');
+    printWindow.document.write(`<div style="display: flex; justify-content: center; align-items: center;">
+                                   <table style="border: 1px solid black; width: 100%; border-collapse: collapse;">
+                                        ${tbl.innerHTML}
+                                   </table> 
+                                </div>
+                                <div style="margin-top: 10%; margin-left: 80%;">Signed by: ___________________</div>
+                                `);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    
+    printWindow.print();
+    printWindow.close();
 }

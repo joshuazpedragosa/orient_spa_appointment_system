@@ -1,0 +1,35 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Choose Employee</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+
+        {% if sched %}
+            {% for x in sched %}
+                {% for y in emp %}
+                    {% if x.employee_vid != y.v_id %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="{{y.v_id}}" name="employee" id="employee"/>
+                            <label class="form-check-label" for="employee"> {{y.first_name}} {{y.last_name}} </label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+             {% for e in emp %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="{{e.v_id}}" name="employee" id="employee"/>
+                    <label class="form-check-label" for="employee"> {{e.first_name}} {{e.last_name}} </label>
+                </div>      
+             {% endfor %}
+        {% endif %}
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeModal" data-mdb-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="ConfirmAppointment('{{id}}')">Confirm</button>
+    </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from controller.models import authentication,services, appointments,dtr_record
+from controller.models import *
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -186,6 +186,34 @@ def display_canceled_appointment(request):
     canceled = appointments.objects.filter(client_email = email, appointment_status = 'Canceled')
     return render(request, 'appointment/canceled_appointment.html', {'response' : canceled})
 
+#Admin appointment functions
+def display_admin_pending(request):
+    app = appointments.objects.filter(appointment_status = 'Pending')
+    return render(request, 'admin_appointments/admin_pending.html', {'appointment' : app})
+
+def display_available_employee(request):
+    appointment_id = request.GET['id']
+    
+    employee = authentication.objects.filter(priv = 3).values()
+    appointment = appointments.objects.filter(id = appointment_id).values()
+    
+    for a in appointment:
+        target_date = a['appointment_date']
+        target_time = a['appointment_time']
+        
+        from_sched = employee_schedule.objects.filter(time=target_time , date=target_date).values()
+        
+    return render(request, 'modal_available_employee.html', {'emp' : employee, 'sched' : from_sched, 'id' : appointment_id})
+        
+        
+
+@api_view(['POST'])
+def confirm_appointment(request):
+    data = request.data
+    
+    
+    #get_appointment = appointments.objects.get(id = data['id'])
+    
 
 #Modal controls
 def modal_content(request):
@@ -308,8 +336,14 @@ def delete_employee(request):
 #display employee dtr card
 def employee_dtr(request):
     v_id = request.GET['a']
+    selected_month = request.GET['b']
+    year = request.GET['c']
     employee = authentication.objects.filter(v_id = v_id).values()
     dtr_rec = dtr_record.objects.filter(employee_vid = v_id).values()
     
-    
-    return render(request, 'employee/dtr_records.html', {'emp' : employee, 'dtr' : dtr_rec})
+    return render(request, 
+                  'employee/dtr_records.html', 
+                  {'emp' : employee, 
+                   'dtr' : dtr_rec, 
+                   'month' : selected_month,
+                   'year' : year})

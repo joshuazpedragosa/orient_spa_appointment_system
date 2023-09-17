@@ -38,6 +38,15 @@ class appointments(models.Model):
     class Meta: 
         db_table = 'tbl_appointment'
         
+class employee_schedule(models.Model):
+    employee_vid = models.CharField(max_length=200, null=False, default='')
+    appointment_id = models.IntegerField(default=0, null=False)
+    time = models.CharField(max_length=100, null=False, default='')
+    date = models.CharField(max_length=100,  null=False, default='')
+    
+    class Meta:
+        db_table = 'tbl_employee_schedule'
+        
 class dtr_record(models.Model):
     employee_vid = models.CharField(max_length=200, null=False, default='')
     am_in = models.CharField(max_length=20, null=True, default='')
