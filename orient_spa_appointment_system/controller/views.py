@@ -89,7 +89,7 @@ def signin(request):
     
     user_credentials = authentication.objects.filter(email = data['email'])
     
-    if not user_credentials.exists() or not check_password(data['password'], user_credentials.first().password):
+    if not user_credentials.exists() or not check_password(data['password'], user_credentials.first().password) or user_credentials.first().priv == 3:
         return Response({'msg': 'Incorrect email or password'})
     elif user_credentials.first().v_status == 'unverified':
         html_message = render_to_string('email.html', {'code': random_code})
@@ -189,7 +189,15 @@ def display_canceled_appointment(request):
 #Admin appointment functions
 def display_admin_pending(request):
     app = appointments.objects.filter(appointment_status = 'Pending')
-    return render(request, 'admin_appointments/admin_pending.html', {'appointment' : app})
+    service = services.objects.all()
+    return render(request, 'admin_appointments/admin_pending.html', {'appointment' : app, 'services' : service})
+
+def display_admin_scheduled(request):
+    app = appointments.objects.filter(appointment_status = 'Confirmed')
+    service = services.objects.all()
+    sched = employee_schedule.objects.all()
+    emp = authentication.objects.filter(priv = 3).values()
+    return render(request, 'admin_appointments/admin_scheduled.html', {'appointment' : app, 'services' : service, 'sched' : sched, 'emp' : emp})
 
 def display_available_employee(request):
     appointment_id = request.GET['id']
@@ -205,15 +213,102 @@ def display_available_employee(request):
         
     return render(request, 'modal_available_employee.html', {'emp' : employee, 'sched' : from_sched, 'id' : appointment_id})
         
-        
 
 @api_view(['POST'])
 def confirm_appointment(request):
     data = request.data
     
+    get_appointment = appointments.objects.get(id = data['app_id'])
+    try:
+        check_confirmed_appointment = employee_schedule.objects.get(appointment_id = data['app_id'])
     
-    #get_appointment = appointments.objects.get(id = data['id'])
+        if get_appointment.appointment_status == 'Confirmed' and check_confirmed_appointment.employee_vid != data['employee']:
+            check_confirmed_appointment.employee_vid = data['employee']
+            check_confirmed_appointment.save()
+            
+            return Response({'msg' : 200})
+        else:
+            return Response({'msg' : 'Appointment was canceled or already confirmed.'})
+    except employee_schedule.DoesNotExist:
+        if get_appointment.appointment_status == 'Pending':
+            get_appointment.appointment_status = 'Confirmed'
+            get_appointment.save()
+            
+            employee_schedule.objects.create(
+                employee_vid = data['employee'],
+                appointment_id = data['app_id'],
+                time = get_appointment.appointment_time,
+                date = get_appointment.appointment_date
+            )
+            
+            return Response({'msg' : 200})
     
+def show_payment_modal(request):
+    appointment_id = request.GET['id']
+    
+    appointment = appointments.objects.filter(id = appointment_id).values()
+    sched = employee_schedule.objects.filter(appointment_id = appointment_id).values()
+    for x in sched:
+        stat = x['status']
+    return render(request, 'admin_appointments/paymentModal.html', {'details' : appointment, 'id' : appointment_id, 'stat' : stat})
+
+@api_view(['POST'])
+def confirm_payment(request):
+    data = request.data
+    sched = employee_schedule.objects.get(appointment_id = data['id'])
+    sched.status = 'Paid'
+    sched.save()
+    
+    return Response({'msg' : 200})
+
+@api_view(['POST'])
+def sendEmail_txtNotif(request):
+    data = request.data
+    email = authentication.objects.filter(v_id = data['employee']).values()
+    appointment = appointments.objects.filter(id = data['app_id']).values()
+        
+    html_message = render_to_string('email.html', 
+                                    {'header': 'Orient SPA Schedule',
+                                    'title': 'New Schedule',
+                                    'header': 'Details',
+                                    'details' : appointment,
+                                    }
+                                    )
+    plain_message = strip_tags(html_message)
+    
+    for e in email:
+        employee_email = e['email']
+            
+    sent_count =send_mail(
+        "Orient SPA Schedule",
+        plain_message,
+        settings.EMAIL_HOST_USER,
+        [employee_email],
+        fail_silently=False,
+        html_message=html_message
+        )
+        
+    if sent_count == 1:
+        message = render_to_string('email.html', 
+                                    {'header': 'Orient SPA Schedule',
+                                    'title': 'Appointment Confirmed',
+                                    'details' : appointment,
+                                    'employee' : email
+                                    }
+                                    )
+        plain_message_1 = strip_tags(message)
+        for x in appointment:
+            client_email = x['client_email']
+            
+        sent_count = send_mail(
+        "Orient SPA Appointment",
+        plain_message_1,
+        settings.EMAIL_HOST_USER,
+        [client_email],
+        fail_silently=False,
+        html_message=message
+        )
+        return Response({'msg': 'Email Sent'})
 
 #Modal controls
 def modal_content(request):

@@ -13,7 +13,29 @@
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
           <p class="card-text">{{text}}</p>
-          <h3>{{code}}</h3>
+          <h3>
+            {% if code != '' %}
+                {{code}}
+            {% elif header != '' %}
+              {{header}}
+            {% endif %}
+          </h3>
+          {% if details %}
+            {% for x in details %}
+                <p class="card-text">Service: {{x.service_name}}</p>
+                <p class="card-text">Client: {{x.client_name}}</p>
+                <p class="card-text">Date: {{x.appointment_date}}</p>
+                <p class="card-text">Time: {{x.appointment_time}}</p>
+                <p class="card-text">Client Phone Number: {{x.client_number}}</p>
+                <p class="card-text">Client Email: {{x.client_email}}</p>
+            {% endfor %}
+          {% endif %}
+          {% if employee %}
+            {% for y in employee %}
+                <p class="card-text">Employee: {{y.first_name}} {{y.last_name}}</p>
+                <p class="card-text">Email: {{y.email}}</p>
+            {% endfor %}
+          {% endif %}
         </div>
         <small style="
             font-size: 18px;

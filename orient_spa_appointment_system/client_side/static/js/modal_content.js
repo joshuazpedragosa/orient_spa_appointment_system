@@ -63,12 +63,12 @@ function addEmployeeModal(){
                             <input type="email" class="form-control rounded" id="email" placeholder="Email" aria-label="Search" aria-describedby="search-addon" required />
                         </div>
 
-                        <div class="input-group rounded mb-2">
-                            <input type="text" class="form-control rounded" id="empPass" value="orientspa_new_employee" placeholder="Password" aria-label="Search" aria-describedby="search-addon" required />
+                        <div class="input-group rounded mb-2 hidden">
+                            <input type="text" class="form-control rounded" id="empPass" value="orientspa_new_employee" placeholder="Password" hidden aria-label="Search" aria-describedby="search-addon" required />
                         </div>
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" onchange="hidePass()" value="" id="flexCheckChecked" checked/>
+                        <div class="form-check hidden" hidden>
+                            <input class="form-check-input" type="checkbox" onchange="hidePass()" value="" id="flexCheckChecked" hidden checked/>
                             <label class="form-check-label" for="flexCheckChecked">Show Password</label>
                         </div>
 

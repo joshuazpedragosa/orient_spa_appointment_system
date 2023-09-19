@@ -1,0 +1,27 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% if stat == 'Paid' %}Receipt {% else %} Confirm Payment{% endif %}</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="card">
+            <div class="card-header text-center">Orient SPA Receipt</div>
+            {% for x in details %}
+                <div class="card-header">Service........................................................ {{x.service_name}}</div>
+                <div class="card-header">Price.......................................................... ₱ {{x.service_price}}</div>
+                <div class="card-footer text-muted">Total.......................................................... ₱ {{x.service_price}}</div>
+            {% endfor %}
+          </div>
+      
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeModal" data-mdb-dismiss="modal">Close</button>
+        {% if stat != 'Paid' %}
+            <button type="button" class="btn btn-primary" onclick="confirmPayment('{{id}}')">Confirm</button>
+        {% endif %}
+    </div>
+    </div>
+</div>

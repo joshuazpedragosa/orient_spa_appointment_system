@@ -43,6 +43,7 @@ class employee_schedule(models.Model):
     appointment_id = models.IntegerField(default=0, null=False)
     time = models.CharField(max_length=100, null=False, default='')
     date = models.CharField(max_length=100,  null=False, default='')
+    status = models.CharField(max_length=20, null=False, default='To Pay')
     
     class Meta:
         db_table = 'tbl_employee_schedule'
