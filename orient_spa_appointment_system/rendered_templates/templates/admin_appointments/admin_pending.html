@@ -44,7 +44,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li><a class="dropdown-item" onclick="showModalAvailable('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Confirm</a></li>
-                  <li><a class="dropdown-item text-danger" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Reject</a></li>
+                  <li><a class="dropdown-item text-danger" onclick="canceModal('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Cancel</a></li>
                 </ul>
               </td>
             </tr>

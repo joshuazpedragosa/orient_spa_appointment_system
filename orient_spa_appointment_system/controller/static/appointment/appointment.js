@@ -1,3 +1,11 @@
+const currentDate = new Date();
+
+const year = currentDate.getFullYear();
+const month = currentDate.getMonth() + 1; 
+
+let new_year = year
+let new_month = month
+
 function Spinner(){
     let spinner = `
                      <div style="display: flex; justify-content: center; margin-top: 20rem; overflow: hidden;">
@@ -46,6 +54,24 @@ class appointment{
         })
         .catch(error => {
             console.error('api error: ', error);
+        })
+    }
+
+    rating(){
+        fetch('/controller/save_rating/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.objects)
+        })
+        .then(response => response.json())
+        .then(data => {
+             data['msg'] === 200 ? displayDone() : null
+        })
+        .catch(error => {
+            console.error('api error: ', error);
+            alert('Something went wrong.')
         })
     }
 }
@@ -145,7 +171,7 @@ function displayPending(){
 }
 
 function displayCanceled(){
-    fetch('/controller/canceled_appointments/')
+    fetch('/controller/canceled_appointments/?a='+new_month+'&&b='+new_year)
     .then((response) => {
         if(!response.ok){
             throw new Error('Network response unstable.')
@@ -159,4 +185,47 @@ function displayCanceled(){
         console.error('api error: ', error)
         alert('Unstable internet connection.')
     })
+}
+
+function displayConfirmed(){
+    fetch('/controller/display_confirmed_appointment/')
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text()
+    })
+    .then((html) => {
+        document.getElementById('ex1-tabs-2').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('api error: ', error)
+        alert('Unstable internet connection.')
+    })
+}
+
+function displayDone(){
+    fetch('/controller/display_done_appointment/?a='+new_month+'&&b='+new_year)
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text()
+    })
+    .then((html) => {
+        document.getElementById('ex1-tabs-4').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('api error: ', error)
+        alert('Unstable internet connection.')
+    })
+    document.getElementById('closeModal').click()
+}
+
+function selectDate(){
+    new_year = document.getElementById('dateInput').value;
+    new_month = document.getElementById('monthSelect').value;
+
+    displayCanceled()
+    displayDone()
 }

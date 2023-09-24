@@ -1,19 +1,36 @@
 {% for x in response %}
-  <div class="card text-center">
-    <div class="card-header"></div>
-    <div class="card-body">
-      {% if x.id %}
-        <h5 class="card-title">{{ x.service_name }}</h5>
-        <p class="card-text">Price: ₱{{ x.service_price }}</p>
-        Date: {{ x.appointment_date }} <br> Time: {{ x.appointment_time }}
-      {% else %}
-        <h5 class="card-title">No appointment available.</h5>
-      {% endif %}
+{% for y in services %}
+{% if x.service_id == y.id %}
+  <div class="card mb-3" style="max-height: 560px;">
+    <div class="row g-0">
+      <div class="col-md-5 text-center">
+        <img
+          src="../../media/{{y.service_img}}"
+          alt="Trendy Pants and Shoes"
+          class="img-fluid rounded-start w-50"
+        />
+      </div>
+      <div class="col-md-5">
+        <div class="card-body">
+          <h5 class="card-title">{{x.service_name}}</h5>
+          <p class="card-text">
+            Price:  ₱ {{x.service_price}}
+          </p>
+          <p class="card-text">
+            Date: {{x.appointment_date}}
+          </p>
+          <p class="card-text">
+            Time: {{x.appointment_time}}
+          </p>
+        </div>
+      </div>
+      <div class="card-footer text-muted text-center">
+        {% if x.id %}
+          <a href="#" class="btn btn-secondary" data-mdb-toggle="modal" data-mdb-target="#Modal" onclick="warningModal('{{ x.id }}')">Cancel Appointment</a>
+        {% endif %}
+      </div>
     </div>
-    <div class="card-footer text-muted">
-      {% if x.id %}
-        <a href="#" class="btn btn-secondary" data-mdb-toggle="modal" data-mdb-target="#Modal" onclick="warningModal('{{ x.id }}')">Cancel Appointment</a>
-      {% endif %}
-    </div>
-  </div><br>
+  </div>
+  {% endif %}
+  {% endfor %}
 {% endfor %}

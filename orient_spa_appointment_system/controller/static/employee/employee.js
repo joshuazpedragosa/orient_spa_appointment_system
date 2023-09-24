@@ -193,6 +193,7 @@ function setDtr(data){
             emp_vid : data,
             time : new_time,
             date : formattedDate,
+            'month' : month,
             dtr_type : dtr_type,
             hour : hours,
             minutes : minutes
@@ -286,4 +287,44 @@ function printTbl() {
     
     printWindow.print();
     printWindow.close();
+}
+
+
+function loadMonthlyRate(v_id){
+    fetch('/controller/displayMonthlyRate/?v_id='+v_id)
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text();
+    })
+    .then((html) => {
+        document.getElementById('employee_cards').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('API Error: ', error)
+        alert('Something went wrong!')
+    })
+}
+
+function generateSalaryReport(id){
+    let rate = document.getElementById('rate').value
+    let month = document.getElementById('month').value
+
+    if (rate !== '' && month !== ''){
+        fetch('/controller/calculate_salary/?id='+id+'&&rate='+rate+'&&month='+month)
+        .then((response) => {
+            if(!response.ok){
+                throw new Error('Network response unstable.')
+            }
+            return response.text();
+        })
+        .then((html) => {
+            document.getElementById('reportContent').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('API Error: ', error)
+            alert('Something went wrong!')
+        })
+    }
 }

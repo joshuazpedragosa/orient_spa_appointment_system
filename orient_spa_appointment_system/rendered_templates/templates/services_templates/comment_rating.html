@@ -1,0 +1,248 @@
+<div class="card">
+    <h5 class="card-header">
+        <button type="button" onclick="loadServices()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">
+            <i class="fas fa-angle-left"></i>
+        </button>
+        Ratings & Comments
+    </h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+              <!-- Spied element -->
+              <div id="scrollspy1" class="sticky-top">
+                <div class="card mb-3" style="max-width: 540px;">
+                    {% for x in service %}
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img
+                          src="../../media/{{x.service_img}}"
+                          alt="Trendy Pants and Shoes"
+                          class="img-fluid rounded-start"
+                        />
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                            
+                          <h5 class="card-title">{{x.service_name}}</h5>
+                          <p class="card-text">
+                            {{x.service_description}}
+                          </p>
+                          <p class="card-text">
+                            <h4 class="text-muted">₱ {{x.service_price}}</h4>
+                          </p>
+                          <p class="card-text">
+                            {% if rate|length == 1 %}
+                                {{rate|length}} Rating
+                            {% elif rate|length == 0 %}
+                                No rating.
+                                {% else %}
+                                {{rate|length}} Ratings
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            {% if avg == 5.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                            {% endif %}
+                            {% if avg > 4.0 and avg < 5.0 %}
+                                {{avg|floatformat:1}}  
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star-half-stroke checked"></i>
+                            {% endif %}
+                            {% if avg == 4.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg == 3.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg > 3.0 and avg < 4.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star-half-stroke checked"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg > 2.0 and avg < 3.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star-half-stroke checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg == 2.0 %}
+                                {{avg|floatformat:1}}  
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg > 1.0 and avg < 2.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star-half-stroke checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg == 1.0 %}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg > 0 and avg < 1 %}
+                                {{avg|floatformat:1}}  
+                                <i class="fas fa-star-half-stroke checked"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                            {% if avg == 0%}
+                                {{avg|floatformat:1}} 
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+              </div>
+              <!-- Spied element -->
+            </div>
+          
+            <div class="col-md-8">
+              <!-- Scrollspy -->
+                <div
+                data-mdb-spy="scroll"
+                data-mdb-target="#scrollspy1"
+                data-mdb-offset="0"
+                class="scrollspy-example"
+                >
+                
+                <div class="card" >
+                <div class="card-header">
+                    Comments
+                </div>
+                <div class="card-body">
+                    <!-- Tabs navs -->
+                        <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                            <li class="nav-item" role="presentation">
+                            <a
+                                onclick="sortComments('5')"
+                                class="nav-link active"
+                                id="ex1-tab-1"
+                                data-mdb-toggle="tab"
+                                href="#ex1-tabs-1"
+                                role="tab"
+                                aria-controls="ex1-tabs-1"
+                                aria-selected="true"
+                                >5 <i class="fas fa-star checked"></i></a
+                            >
+                            </li>
+                            <li class="nav-item" role="presentation">
+                            <a
+                                onclick="sortComments('4')"
+                                class="nav-link"
+                                id="ex1-tab-2"
+                                data-mdb-toggle="tab"
+                                href="#ex1-tabs-2"
+                                role="tab"
+                                aria-controls="ex1-tabs-2"
+                                aria-selected="false"
+                                >4 <i class="fas fa-star checked"></i></a
+                            >
+                            </li>
+                            <li class="nav-item" role="presentation">
+                            <a
+                                onclick="sortComments('3')"
+                                class="nav-link"
+                                id="ex1-tab-3"
+                                data-mdb-toggle="tab"
+                                href="#ex1-tabs-3"
+                                role="tab"
+                                aria-controls="ex1-tabs-3"
+                                aria-selected="false"
+                                >3 <i class="fas fa-star checked"></i></a
+                            >
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a
+                                    onclick="sortComments('2')"
+                                    class="nav-link"
+                                    id="ex1-tab-4"
+                                    data-mdb-toggle="tab"
+                                    href="#ex1-tabs-4"
+                                    role="tab"
+                                    aria-controls="ex1-tabs-4"
+                                    aria-selected="false"
+                                    >2 <i class="fas fa-star checked"></i></a
+                                >
+                            </li>
+                            <li class="nav-item" role="presentation">
+                            <a
+                                onclick="sortComments('1')"
+                                class="nav-link"
+                                id="ex1-tab-5"
+                                data-mdb-toggle="tab"
+                                href="#ex1-tabs-5"
+                                role="tab"
+                                aria-controls="ex1-tabs-5"
+                                aria-selected="false"
+                                >1 <i class="fas fa-star checked"></i></a
+                            >
+                            </li>    
+                        </ul>
+                        <!-- Tabs navs -->
+                        
+                        <!-- Tabs content -->
+                        <div class="tab-content" id="ex1-content">
+                            <div
+                            class="tab-pane fade show active"
+                            id="comments"
+                            role="tabpanel"
+                            >
+                            
+                
+                            
+                
+                
+                            </div>
+                        </div>
+                        <!-- Tabs content -->
+                </div>
+                </div>
+                
+                </div>
+              <!-- Scrollspy -->
+            </div>
+          </div>
+    </div>
+</div>

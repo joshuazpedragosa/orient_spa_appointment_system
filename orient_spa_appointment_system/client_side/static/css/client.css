@@ -77,3 +77,9 @@ body {
   .checked {
     color: orange;
   }
+
+  .scrollspy-example {
+    position: relative;
+    height: 60vh;
+    overflow: auto;
+  }

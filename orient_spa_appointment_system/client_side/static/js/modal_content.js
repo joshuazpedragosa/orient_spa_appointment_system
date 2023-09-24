@@ -155,3 +155,129 @@ function viewImg(){
        img.src = URL.createObjectURL(file)
     }
 }
+
+function ShowRatingModal(id){
+    let modal_comment_rating = `<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rate</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-outline">
+            <textarea class="form-control" style="border: 1px solid gray;" id="comment" rows="4"></textarea>
+            <label class="form-label" for="textAreaExample">Comment</label>
+        </div>
+        <div class="form-outline text-xl">
+            Rate:
+            <i class="fas fa-star text-warning" id="star1" onclick="starRating(1)"></i>
+            <i class="fas fa-star text-warning" id="star2" onclick="starRating(2)"></i>
+            <i class="fas fa-star text-warning" id="star3" onclick="starRating(3)"></i>
+            <i class="fas fa-star text-warning" id="star4" onclick="starRating(4)"></i>
+            <i class="fas fa-star text-warning" id="star5" onclick="starRating(5)"></i>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <button type="button" onclick="saveCommentRate(${id})" class="btn btn-primary">
+            <i class="far fa-paper-plane"></i> Comment
+        </button>
+    </div>
+    </div>
+    </div>`;
+
+    document.getElementById('Modal').innerHTML = modal_comment_rating;
+}
+let rate = 5
+
+function starRating(num){
+    let star_2 = document.getElementById('star2')
+    let star_3 = document.getElementById('star3')
+    let star_4 = document.getElementById('star4')
+    let star_5 = document.getElementById('star5')
+
+    switch (num) {
+        case 1:
+            star_2.classList.add('far')
+            star_2.classList.remove('fas')
+            star_3.classList.add('far')
+            star_3.classList.remove('fas')
+            star_4.classList.add('far')
+            star_4.classList.remove('fas')
+            star_5.classList.add('far')
+            star_5.classList.remove('fas')
+            rate = 1
+            break;
+        case 2:
+            if(star_2.classList.contains('fas')){
+                star_3.classList.add('far')
+                star_3.classList.remove('fas')
+                star_4.classList.add('far')
+                star_4.classList.remove('fas')
+                star_5.classList.add('far')
+                star_5.classList.remove('fas')
+                rate = 2
+            }
+            else{
+                star_2.classList.add('fas')
+                star_2.classList.remove('far')
+            }
+            break;
+        case 3:
+            if(star_3.classList.contains('fas')){
+                star_4.classList.add('far')
+                star_4.classList.remove('fas')
+                star_5.classList.add('far')
+                star_5.classList.remove('fas')
+                rate = 3
+            }
+            else{
+                star_2.classList.add('fas')
+                star_2.classList.remove('far')
+                star_3.classList.add('fas')
+                star_3.classList.remove('far')
+            }
+            break;
+        case 4:
+            if(star_4.classList.contains('fas')){
+                star_5.classList.add('far')
+                star_5.classList.remove('fas')
+                rate = 4
+            }
+            else{
+                star_2.classList.add('fas')
+                star_2.classList.remove('far')
+                star_3.classList.add('fas')
+                star_3.classList.remove('far')
+                star_4.classList.add('fas')
+                star_4.classList.remove('far')
+            }
+            break
+        case 5:
+            star_2.classList.add('fas')
+            star_2.classList.remove('far')
+            star_3.classList.add('fas')
+            star_3.classList.remove('far')
+            star_4.classList.add('fas')
+            star_4.classList.remove('far')
+            star_5.classList.add('fas')
+            star_5.classList.remove('far')
+            rate = 5
+            break;
+        default:
+            break;
+    }
+}
+
+function saveCommentRate(id){
+    let comment = document.getElementById('comment')
+
+    let rate_obj = {
+        'app_id' : id,
+        'comment' : comment.value,
+        'rate' : rate
+    }
+
+    const my_rate = new appointment(rate_obj)
+    my_rate.rating()
+}

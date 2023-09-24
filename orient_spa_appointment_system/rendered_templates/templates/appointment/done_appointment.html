@@ -22,13 +22,15 @@
       <tr>
         <th>Services</th>
         <th>Date/Time Scheduled</th>
-        <th>Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% if response %}
             {% for x in response %}
                 {% for y in services %}
+                {% for sched in emp %}
+                {% if sched.appointment_id == x.id %}
                     {% if x.appointment_date|slice:"5:7"|add:0 == month|add:0 and x.appointment_date|slice:"0:4"|add:0 == year|add:0 %}
                         {% if x.service_id == y.id %}
                         <tr>
@@ -51,14 +53,21 @@
                                 <p class="text-muted mb-0">{{x.appointment_time}}</p>
                             </td>
                             <td>
-                                <span class="badge rounded-pill badge-danger">
-                                    <i class="fas fa-circle-exclamation text-danger"></i>
-                                    Canceled
-                                </span>
+                                {% if sched.status == 'Rated' %}
+                                    <button type="button" onclick="ShowRatingModal('{{x.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" class="btn btn-outline-warning btn-sm disabled" data-mdb-ripple-color="dark">
+                                        <i class="fas fa-star text-warning"></i> Service rated
+                                    </button>
+                                {% else %}
+                                    <button type="button" onclick="ShowRatingModal('{{x.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" class="btn btn-outline-warning btn-sm" data-mdb-ripple-color="dark">
+                                        <i class="fas fa-star text-warning"></i> Rate
+                                    </button>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endif %}
                     {% endif %}
+                    {% endif %}
+                    {% endfor %}
                 {% endfor %}
             {% endfor %}
       {% else %}

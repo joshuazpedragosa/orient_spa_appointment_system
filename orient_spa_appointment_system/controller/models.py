@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class authentication(models.Model):
@@ -20,6 +21,7 @@ class services(models.Model):
     service_price = models.IntegerField(default=0, null=False)
     service_img = models.ImageField(upload_to='image_uploads')
     service_description = models.CharField(max_length=250, null=False, default='')
+    service_status = models.CharField(max_length=20, null=False, default='active')
     
     class Meta:
         db_table = 'tbl_services'
@@ -55,6 +57,27 @@ class dtr_record(models.Model):
     pm_in = models.CharField(max_length=20, null=True, default='')
     pm_out = models.CharField(max_length=20, null=True, default='')
     date = models.CharField(max_length=20, null=True, default='')
+    month = models.IntegerField(default=0, null=False)
     
     class Meta:
         db_table = 'tbl_dtr'
+        
+class ratings_comments(models.Model):
+    user_id = models.CharField(max_length=200, null=False, default='')
+    service_id = models.IntegerField(default=0, null=False)
+    comments = models.CharField(max_length=5000, null=True, default='')
+    ratings = models.IntegerField(default=5, null=False)
+    date_time = models.DateTimeField(default=timezone.now)
+    replied = models.CharField(max_length=10, null=True, default='false')
+    
+    class Meta:
+        db_table = 'tbl_ratings_comments'
+        
+class replies_comment(models.Model):
+    u_id = models.CharField(max_length=200, null=False, default='')
+    comment_id = models.IntegerField(default=0, null=False)
+    replies = models.CharField(max_length=5000, null=True, default='')
+    date_time = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        db_table = 'tbl_comment_replies'

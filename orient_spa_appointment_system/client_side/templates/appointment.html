@@ -108,7 +108,7 @@
           My Appointments
         </h4>
         <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-          <h5><i class="fas fa-calendar-alt"></i> <span id="date"></span></h5>
+         <!-- <h5><i class="fas fa-calendar-alt"></i> <span id="date"></span></h5>-->
         </div>
       </div>
 
@@ -137,6 +137,7 @@
           <li class="nav-item" role="presentation">
             <a
               class="nav-link"
+              onclick="displayConfirmed()"
               id="ex1-tab-2"
               data-mdb-toggle="tab"
               href="#ex1-tabs-2"
@@ -159,7 +160,7 @@
               Canceled
               </a>
           </li>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item" onclick="displayDone()" role="presentation">
             <a
               class="nav-link"
               id="ex1-tab-4"
@@ -168,7 +169,7 @@
               role="tab"
               aria-controls="ex1-tabs-4"
               aria-selected="false"
-              >Paid</a
+              >Done</a
             >
           </li>
         </ul>
@@ -185,38 +186,48 @@
           <div class="card-booking-container">
           <!-- Pending container -->
             <div id="pending">
-              
+              <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           
           </div>
           </div>
 
           <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-            Tab 2 content
+            <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
+              <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
 
           <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
             <!-- Canceled container -->
             <div id="canceled">
-              
+              <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
 
           </div>
           
           <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-            Tab 4 content
+            <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
+              <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
         </div>
         <!-- Tabs content -->
     </div>
   </main>
   <!--Main layout-->
-  <script>
-    const currentDate = new Date();
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString(undefined, options);
-    document.getElementById('date').innerHTML = formattedDate
-  </script>
   <script src="{% static 'js/modal_content.js' %}"></script>
   <script src="{% static 'appointment/appointment.js' %}"></script>
   {% include 'modal/modal.html' %}

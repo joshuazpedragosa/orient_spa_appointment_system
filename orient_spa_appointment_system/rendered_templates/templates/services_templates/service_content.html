@@ -1,7 +1,9 @@
 {% for s in services %}
-{% load static %}
 <div class="col-sm-6">
   <div class="card mb-3" style="max-width: 540px;">
+    {% if s.service_status == 'inactive' %}
+      <span class="badge badge-dark">Not available</span>
+    {% endif %}
       <div class="row g-0">
         <div class="col-md-4">
           <img
@@ -19,22 +21,32 @@
             <p class="card-text">
               <h4 class="text-muted">₱ {{s.service_price}}</h4>
             </p>
-            <p class="card-text">
-              <small class="text-muted">1.7K ratings</small>
-            </p>
-            <p class="card-text">
-              <small class="text-muted">4.4</small>
-              <span class="fa fa-star checked" style="color: orange;"></span>
-              <span class="fa fa-star checked" style="color: orange;"></span>
-              <span class="fa fa-star checked" style="color: orange;"></span>
-              <span class="fa fa-star" style="color: orange;"></span>
-              <span class="fa fa-star"></span>
-            </p>
-            <p class="card-text">
-              <button type="button" class="btn btn-primary">
-                  Comments <span class="badge badge-primary ms-2">9</span>
-                  <span class="visually-hidden">unread messages</span>
+            <p class="card-text display-flex">
+              <button type="button" onclick="loadComments('{{s.id}}')" class="btn btn-secondary">
+                View Ratings<i class="fas fa-star checked"></i>  <i class="fas fa-angles-right"></i>
               </button>
+              {% if request.session.priv == 1 %}
+                <div class="dropdown">
+                  <a
+                    class="btn btn-secondary dropdown-toggle "
+                    href="#"
+                    role="button"
+                    id="dropdownMenuLink"
+                    data-mdb-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    More Options
+                  </a>
+                
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" onclick="openDetailsModal('{{s.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Edit details</a></li>
+                    <li><a class="dropdown-item" onclick="AvailabilityModal('{{s.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">
+                     {% if s.service_status == 'active' %}Set inactive {% else %} Set active{% endif %}
+                    </a></li>
+                    <li><a class="dropdown-item text-danger" onclick="deletServiceModal('{{s.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Delete service</a></li>
+                  </ul>
+                </div>
+              {% endif %}
             </p>
           </div>
         </div>

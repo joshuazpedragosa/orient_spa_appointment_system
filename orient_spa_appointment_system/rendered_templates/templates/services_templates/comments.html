@@ -1,0 +1,115 @@
+{% if comment %}
+    {% for x in comment %}
+        {% for y in client %}
+                {% if x.user_id == y.v_id %}    
+                        <div class="card">
+                            <div class="card-header">
+                                {% if x.user_id == request.session.v_id %}
+                                    <i class="fas fa-circle-user text-secondary"></i>  You
+                                {% else %}
+                                    <i class="fas fa-circle-user"></i>  {{y.first_name}}
+                                {% endif %}
+                                <small class="text-muted text-sm float-end">{{x.date_time}}</small>
+                            </div>
+                            <div class="card-body">
+                                {% if x.comments != '' %}
+                                    <p>{{x.comments}}</p>
+                                {% else %}
+                                    <p>
+                                        Rated: 
+                                        {% if x.ratings == 5 %}
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                        {% elif x.ratings == 4 %}
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star"></i>
+                                        {% elif x.ratings == 3 %}
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        {% elif x.ratings == 2 %}
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="fas fa-star checked"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                                <br>
+                        
+                            {% for z in reply %}
+                                {% if x.id == z.comment_id %}
+                                    {% if z.u_id == request.session.v_id %}
+                                        <footer class="blockquote-footer text-primary">You replied to this comment</footer>
+                                        <div class="card-header text-dark">
+                                        <p class="card-text">{{z.replies}}</p>
+                                        <small class="text-sm text-muted">{{z.date_time}}</small>
+                                        </div>
+                                        <footer class="footer">
+                                            <p class="card-text text-primary float-end">
+                                                Replied 
+                                                <i class="fas fa-check-double"></i>
+                                            </p>
+                                        </footer>
+                                    {% endif %}
+                                    {% if z.u_id != request.session.v_id %}
+                                            <footer class="blockquote-footer text-primary">Replied by Orient SPA Admin</footer>
+                                            <div class="card-header text-dark">
+                                            <p class="card-text">{{z.replies}}</p>
+                                            <small class="text-sm text-muted">{{z.date_time}}</small>
+                                            </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                         {% if x.replied == 'false' and request.session.priv == 1 %}
+                            <footer class="footer">
+                                <button type="button" 
+                                        class="btn btn-link btn-sm btn-rounded float-end"
+                                        data-mdb-toggle="collapse"
+                                        data-mdb-target="#text-box-{{x.id}}"
+                                        aria-expanded="false"
+                                        aria-controls="text-box-{{x.id}}"
+                                        >
+                                    Reply <i class="fas fa-reply"></i>
+                                </button>
+                            </footer>
+                         {% endif %}
+
+                                <div class="collapse mt-3" id="text-box-{{x.id}}">
+                                    <div class="input-group mb-3">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Type your reply"
+                                            aria-label="Reply"
+                                            aria-describedby="button-addon2"
+                                            id="reply_{{x.id}}"
+                                        />
+                                        <button class="btn btn-outline-primary" type="button" onclick="saveReply('{{x.id}}')" id="button-addon2" data-mdb-ripple-color="dark">
+                                            <i class="far fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+<i class="fas fa-comment-slash"></i> No comment available.
+{% endif %}

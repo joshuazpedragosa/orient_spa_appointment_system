@@ -6,7 +6,6 @@
         <th>Date/Time Scheduled</th>
         <th>Scheduled To:</th>
         <th>Status</th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -44,30 +43,12 @@
                     <p class="text-muted mb-0">{{y.email}}</p>
                 </td>
                 <td>
-                  {% if x.status == 'Paid' %}
+                  {% if x.status == 'Paid' or x.status == 'Rated' %}
                     <span class="badge badge-success rounded-pill d-inline"><i class="fas fa-check"></i> Paid</span>
                     {% else %}
                     <span class="badge badge-warning rounded-pill d-inline"><i class="fas fa-clock-rotate-left"></i> To Pay</span>
                   {% endif %}
                 </td>
-                <td>
-                    <button type="button" class="btn btn-link btn-lg btn-rounded"
-                            id="dropdownMenuButton"
-                            data-mdb-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-user-gear"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <li><a class="dropdown-item" onclick="showModalAvailable('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Change Employee</a></li>
-                      <li><a class="dropdown-item" onclick="paymentModal('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">{% if x.status == 'Paid' %} View Receipt {% else %} Confirm Payment {% endif %}</a></li>
-                      {% if x.status == 'Paid' %}
-                        <li><a class="dropdown-item" onclick="MarkasDone('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Mark as Done</a></li>
-                      {% endif %}
-                      {% if x.status != 'Paid' %}
-                      <li><a class="dropdown-item text-danger" onclick="canceModal('{{a.id}}')" data-mdb-toggle="modal" data-mdb-target="#Modal" href="#">Cancel Appointment</a></li>
-                      {% endif %}
-                    </ul>
-                  </td>
               </tr>
             {% endif %}
             {% endfor %}

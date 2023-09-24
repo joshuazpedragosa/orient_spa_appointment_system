@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
 
-        <div class="card">
+        <div class="card" id="receipt">
             <div class="card-header text-center">Orient SPA Receipt</div>
             {% for x in details %}
                 <div class="card-header">Service........................................................ {{x.service_name}}</div>
@@ -21,6 +21,11 @@
         <button type="button" class="btn btn-secondary" id="closeModal" data-mdb-dismiss="modal">Close</button>
         {% if stat != 'Paid' %}
             <button type="button" class="btn btn-primary" onclick="confirmPayment('{{id}}')">Confirm</button>
+            {% else %}
+            <a class="btn text-white" onclick="printReciept()" style="background-color: #55acee;" href="#!" role="button">
+                <i class="fas fa-print me-2"></i>
+                Print
+            </a>
         {% endif %}
     </div>
     </div>

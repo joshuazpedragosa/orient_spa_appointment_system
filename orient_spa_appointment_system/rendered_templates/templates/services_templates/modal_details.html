@@ -1,0 +1,44 @@
+{% for details in service_details %}
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Service</h5>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <span class="text-danger" id="errMsg" ></span>
+            <div class="input-group mb-3">
+                <input
+                  type="text"
+                  class="form-control rounded"
+                  id="service_name"
+                  placeholder="Service name"
+                  aria-label="name"
+                  value="{{details.service_name}}"
+                />
+            </div>
+
+            <div class="input-group mb-3">
+                <input
+                  type="number"
+                  class="form-control rounded"
+                  id="service_price"
+                  placeholder="Service price"
+                  aria-label="price"
+                  value="{{details.service_price}}"
+                />
+            </div>
+
+            <div class="form-outline">
+                <textarea class="form-control rounded" style="border: 1px solid gray;" id="service_description" rows="4">{{details.service_description}}</textarea>
+            </div>
+            
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+            <button type="button" onclick="updateServiceDetails('{{details.id}}')" class="btn btn-primary">Update</button>
+        </div>
+        </div>
+    </div>
+{% endfor %}
