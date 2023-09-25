@@ -1,0 +1,44 @@
+{% for service in services %}
+    {% for service_data in object_services_income %}
+        {% if service.id == service_data.service_id %}
+            <div class="col">
+                <div class="card">
+                <img src="../../media/{{service.service_img}}" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+                <div class="card-body">
+                    <h5 class="card-title text-muted">{{service.service_name}}</h5>
+                    <footer class="card-footer">
+                        <h4 class="card-title text-center">
+                            Monthly Income
+                        </h4>
+                        <div class="row g-0 text-center">
+                            <div class="col-md-4">
+                                {% if service_data.service_income > service_data.service_income_last_month %}
+                                    <h5 class="text-success">
+                                        <i class="fas fa-arrow-up-long"></i>
+                                        {{service_data.service_rating|floatformat:1}}%
+                                    </h5>
+                                {% elif service_data.service_income == service_data.service_income_last_month %}
+                                    <h5 class="text-warning">
+                                        <i class="fas fa-right-left"></i>
+                                        {{service_data.service_rating|floatformat:1}}%
+                                    </h5>
+                                {% else %}
+                                    <h5 class="text-danger">
+                                        <i class="fas fa-arrow-down-long"></i>
+                                        {{service_data.service_rating|floatformat:1}}%
+                                    </h5>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="text-secondary">
+                                    ₱ {{service_data.service_income}}
+                                </h5>
+                            </div>
+                        </div>
+                    </footer>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}

@@ -193,7 +193,7 @@ function setDtr(data){
             emp_vid : data,
             time : new_time,
             date : formattedDate,
-            'month' : month,
+            'month' : month+''+year,
             dtr_type : dtr_type,
             hour : hours,
             minutes : minutes
@@ -299,7 +299,8 @@ function loadMonthlyRate(v_id){
         return response.text();
     })
     .then((html) => {
-        document.getElementById('employee_cards').innerHTML = html;
+        const template = document.getElementById('employee_cards').innerHTML = html;
+        template ? document.getElementById('rate_year').value = year : null
     })
     .catch(error => {
         console.error('API Error: ', error)
@@ -310,9 +311,10 @@ function loadMonthlyRate(v_id){
 function generateSalaryReport(id){
     let rate = document.getElementById('rate').value
     let month = document.getElementById('month').value
+    let year = document.getElementById('rate_year').value
 
-    if (rate !== '' && month !== ''){
-        fetch('/controller/calculate_salary/?id='+id+'&&rate='+rate+'&&month='+month)
+    if (rate !== '' && month !== '' && year !== ''){
+        fetch('/controller/calculate_salary/?id='+id+'&&rate='+rate+'&&month='+month+'&&year='+year)
         .then((response) => {
             if(!response.ok){
                 throw new Error('Network response unstable.')
@@ -327,4 +329,12 @@ function generateSalaryReport(id){
             alert('Something went wrong!')
         })
     }
+}
+
+function printSalaryReport(){
+    let salary_report_card = document.getElementById('reportContent')
+    newWindow = window.open("")
+    newWindow.document.write(salary_report_card.outerHTML);
+    newWindow.print()
+    newWindow.close()
 }

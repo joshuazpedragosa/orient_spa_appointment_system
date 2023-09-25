@@ -643,72 +643,404 @@ def calculate_salary(request):
     v_id = request.GET['id']
     rate = request.GET['rate']
     month = request.GET['month']
+    year = request.GET['year']
     
-    records = dtr_record.objects.filter(employee_vid = v_id, month = month).values()
-    record_count = records.count()
+    records = dtr_record.objects.filter(employee_vid = v_id, month = month+''+year).values()
+    _count = records.count()
     
-    amount = int(rate) * record_count
+    record_count = _count
     late_hours = 0
+    late_minutes = 0
+    early_out_amount = 0
     
     for x in records:
-        time_am = x['am_in'].split(":")
-        out_am = x['am_out'].split(":")
-        time_pm = x['pm_in'].split(":")
-        out_pm = x['pm_out'].split(":")
+        record_am_in = x['am_in']
+        record_am_out= x['am_out']
+        record_pm_in = x['pm_in']
+        record_pm_out = x['pm_out']
         
-        if len(out_am) == 2 and len(time_am) == 2 and len(time_pm) == 2 and len(out_pm) == 2:
+        if record_am_in != '' and record_am_out == '' or record_pm_in != '' and record_pm_out == '':
+            record_count = record_count -1
+        elif record_am_in == '' and record_am_out == '' and record_pm_in != '' and record_pm_out != '':
+            record_am_in = "00:00 am"
+            record_am_out = "00:00 pm"
+        elif record_am_in != '' and record_am_out != '' and record_pm_in == '' and record_pm_out == '':
+            record_pm_in = "00:00 pm"
+            record_pm_out = "00:00 pm"
+        elif record_am_in != '' and record_am_out == '' and record_pm_in != '' and record_pm_out != '':
+            record_am_in = "00:00 am"
+            record_am_out = "00:00 pm"
+        elif record_am_in != '' and record_am_out != '' and record_pm_in != '' and record_pm_out == '':
+            record_pm_in = "00:00 am"
+            record_am_out = "00:00 pm"
+            
+        new_am_in = record_am_in.split(":")
+        new_am_out = record_am_out.split(":")
+        new_pm_in = record_pm_in.split(":")
+        new_pm_out = record_pm_out.split(":")
+        
+        #make sure if all required data is !null        
+        if len(new_am_in) == 2 and len(new_am_out) == 2 and len(new_pm_in) == 2 and len(new_pm_out) == 2:
            try:
-               am_out = int(out_am[0])
-               am_in = int(time_am[0])
-               pm_in = int(time_pm[0])
-               pm_out = int(out_pm[0])
+               #hours converted to integer
+               hour_am_out = int(new_am_out[0])
+               _hour_am_in = int(new_am_in[0])
+               _hour_pm_in = int(new_pm_in[0])
+               hour_pm_out = int(new_pm_out[0])
                
-               if am_in < 8:
-                   am_in = am_in + 1
-               elif not am_in:
-                   am_in = 0
-               elif not am_out:
-                   am_out = 0
-               elif am_in and not am_out:
-                   am_in = 0
-                   am_out = 0
+               hour_am_in = _hour_am_in
+               hour_pm_in = _hour_pm_in
+               
+               #minutes converted to integer
+               mins_am_out = int(new_am_out[1][:-2])
+               mins_am_in = int(new_am_in[1][:-2])
+               mins_pm_in = int(new_pm_in[1][:-2])
+               mins_pm_out = int(new_pm_out[1][:-2])
+               
+               #check if time calculation starts at 8am and 1pm
+               if hour_am_in < 8 and hour_am_in != 0:
+                   hour_am_in = hour_am_in + 1
                    
-               if pm_in == 12:
-                   pm_in = 1
-               elif not pm_in:
-                   pm_in = 0
-               elif not pm_out:
-                   pm_out = 0
-               elif pm_in and not pm_out:
-                   pm_in = 0
-                   pm_out = 0
+               if hour_pm_in == 12:
+                   hour_pm_in = 1
                
-               am_hour = am_out - am_in
-               pm_hour = pm_out - pm_in
-               
+               #calculate lates sa time in per hour (am and pm)
+               am_hour = hour_am_out - hour_am_in
+               pm_hour = hour_pm_out - hour_pm_in
                working_hour = am_hour + pm_hour
                
+               #pagcheck if maximum of 8 hours a day ang calculation ng salary
                if working_hour > 8:
                    working_hour = 8
-                   
-               late = 8 - working_hour
                
+               #pag get ng late in hours        
+               hr_late = 8 - working_hour
                
+               #pag minus noong day if yung dtr ay walang time out o nag cut ng dtr
+               if am_hour == 0 and pm_hour == 0:
+                   record_count = record_count - 1
+                   hr_late = hr_late - 8
+               else:
+                    #calculate lates sa time in per minutes (am and pm)
+                    if _hour_am_in >= 8:
+                        late_minutes +=  mins_am_in
+                        if late_minutes > 59:
+                            late_hours += 1
+                            late_minutes -= 60
+                            
+                    if _hour_pm_in >= 1 and _hour_pm_in != 12:
+                        late_minutes += mins_pm_in
+                        if late_minutes > 59:
+                            late_hours += 1
+                            late_minutes -= 60
+                            
+                    #calculate excess minutes before early out (am and pm)
+                    if hour_am_out < 12 and hour_am_out != 0:
+                        am_early_out_deduction = 60 - mins_am_out
+                        early_out_amount += am_early_out_deduction
+                        
+                    if hour_pm_out < 5 and hour_pm_out != 0:
+                        pm_early_out_deduction = 60 - mins_pm_out
+                        early_out_amount += pm_early_out_deduction
                
-               late_hours += late
+               #add ng late sa main variable kada loop    
+               late_hours += hr_late
+               
            except ValueError:
                pass
     
+    amount = int(rate) * record_count
     late_amount = late_hours * 60
-    total_salary = amount - late_amount
+    total_late_amount = late_amount + late_minutes
+    partial_total_salary = amount - total_late_amount 
+    total_salary = partial_total_salary - early_out_amount
     
     context = {
         'rate' : rate,
         'record_count' : record_count,
         'amount' : amount,
-        'late_hours' :late_hours,
-        'late_amount' : late_amount,
+        'late_hours' : late_hours,
+        'late_minutes' : late_minutes,
+        'late_amount' : total_late_amount,
+        'early_out_amount' : early_out_amount,
         'total' : total_salary
     }
     
     return render(request, 'employee/salary_report.html', context)
+
+#get data to load in dashboard main cards
+def load_dashboard_main_cards(request):
+    _appointments = appointments.objects.all()
+    _pending_appointments = appointments.objects.filter(appointment_status = 'Pending')
+    _canceled_appointments = appointments.objects.filter(appointment_status = 'Canceled')
+    _employees = authentication.objects.filter(priv = 3)
+    
+    total_appointments = _appointments.count()
+    total_pending_appointments = _pending_appointments.count()
+    total_canceled_appointments = _canceled_appointments.count()
+    total_employees = _employees.count()
+    
+    context = {
+        'total_appointments': total_appointments,
+        'total_pending_appointments' : total_pending_appointments,
+        'total_canceled_appointments' : total_canceled_appointments,
+        'total_employees' : total_employees
+    }
+    
+    return render(request, 'admin_dashboard_templates/dashboard_cards.html', context)
+
+#get sales and revenues data and load to dashboard
+def load_sales_revenue(request):
+    #get monthly income and increase percentage
+    current_datetime = datetime.now()
+    current_month = current_datetime.month
+    current_year = current_datetime.year
+    
+    #income this month
+    total_monthly_income = 0
+    
+    #income last month
+    total_income_last_month = 0
+    
+    #income increase or decrease rating
+    income_rating = 0
+    
+    #canceled appointment in current month
+    canceled_current_month = 0
+    
+    #canceled appointment last month
+    canceled_last_month = 0
+    
+    #appointment canceled rating
+    canceled_rating = 0
+    
+    app_data = appointments.objects.all().values()
+    
+    for n in app_data:
+        appointment_date = n['appointment_date']
+        appointment_status = n['appointment_status']
+        _price = n['service_price']
+        
+        splited_date = appointment_date.split("-")
+        
+        year = int(splited_date[0])
+        month = int(splited_date[1])
+        
+        if year == current_year and month == current_month:
+            if appointment_status == 'Done':
+                total_monthly_income += _price
+                
+            if appointment_status == 'Canceled':
+                canceled_current_month += 1
+        
+        if current_month == 1:        
+            if year == (current_year - 1) and month == 12:
+                if appointment_status == 'Done':
+                    total_income_last_month += _price
+                    
+                if appointment_status == 'Canceled':
+                    canceled_last_month += 1
+        else:
+            if year == current_year and month == (current_month - 1):
+                if appointment_status == 'Done':
+                    total_income_last_month += _price
+                    
+                if appointment_status == 'Canceled':
+                    canceled_last_month += 1
+    if total_monthly_income != 0:
+        if total_monthly_income >= total_income_last_month:
+            product = total_income_last_month * 100
+            percent = product / total_monthly_income
+            income_rating += 100 - percent
+        else:
+            _product = total_monthly_income * 100
+            _percent = _product / total_income_last_month
+            income_rating += 100 - _percent
+    elif total_monthly_income == 0 and total_income_last_month != 0:
+        income_rating += 100
+
+    #Get overall services ratings
+    _ratings = ratings_comments.objects.all().values()
+    total_ratings_number = _ratings.count()
+    ratings_sum = 0
+    
+    for x in _ratings:
+        ratings_sum += x['ratings']
+    
+    _total_rating = ratings_sum / total_ratings_number
+    
+    #get monthly canceled appointment ratings comparing last month and present
+    if canceled_current_month != 0:
+        if canceled_current_month > canceled_last_month:
+            canceled_product = canceled_last_month * 100
+            canceled_percent = canceled_product / canceled_current_month
+            canceled_rating += 100 - canceled_percent
+        else:
+            _canceled_product = canceled_current_month * 100
+            _canceled_percent = _canceled_product / canceled_last_month
+            canceled_rating += 100 - _canceled_percent
+    elif canceled_current_month == 0 and canceled_last_month != 0:
+        canceled_rating += 100
+    
+    context = {
+        'total_monthly_income' : total_monthly_income,
+        'income_rating' : income_rating,
+        'total_monthly_income' : total_monthly_income,
+        'total_income_last_month' : total_income_last_month,
+        'rating' : _total_rating,
+        'canceled_rating' : canceled_rating,
+        'canceled_current_month' : canceled_current_month,
+        'canceled_last_month' : canceled_last_month
+    }
+    
+    return render(request, 'admin_dashboard_templates/sales_revenue.html', context)
+
+def compute_rating(obj):
+   _service_ratings = 0
+   _current_income = obj['service_income']
+   _last_month_income = obj['service_income_last_month']
+   
+   if _current_income != 0:
+        if _current_income >= _last_month_income:
+                _increase_product = _last_month_income * 100
+                _increase_percent = _increase_product / _current_income
+                _service_ratings += 100 - _increase_percent
+        else:
+                _decrease_product = _current_income * 100
+                _decrease__percent = _decrease_product / _last_month_income
+                _service_ratings += 100 - _decrease__percent
+   elif _current_income == 0 and _last_month_income != 0:
+       _service_ratings += 100             
+           
+   return _service_ratings   
+
+def load_services_sales(request):
+    _services = services.objects.filter(service_status = 'active').values()
+    _appointment = appointments.objects.filter(appointment_status = 'Done').values()
+    _current_datetime = datetime.now()
+    _current_month = _current_datetime.month
+    _current_year = _current_datetime.year
+    
+    object_services_income = []
+    
+    for y in _services:
+        service_id = y['id']
+        service_income = 0
+        service_income_last_month = 0
+        
+        for x in _appointment:
+            _service_price = x['service_price']
+            _service_id = x['service_id']
+            _appointment_date = x['appointment_date']
+            
+            _date_parts = _appointment_date.split("-")
+            _year = int(_date_parts[0])
+            _month = int(_date_parts[1])
+            
+            if service_id == _service_id:
+                if _month == _current_month and _year == _current_year:
+                    service_income += _service_price
+                
+                if _month == 1:
+                    if _year == (_current_year - 1) and _month == 12:
+                        service_income_last_month += _service_price
+                else:
+                    if _year == _current_year and _month == (_current_month - 1):
+                        service_income_last_month += _service_price
+        
+        income_objects = {'service_income' : service_income, 'service_income_last_month' : service_income_last_month}
+        service_rating = compute_rating(income_objects)        
+        
+        object_services_income.append({
+                                       'service_id' : service_id,
+                                       'service_income' : service_income,
+                                       'service_income_last_month' : service_income_last_month,
+                                       'service_rating' : service_rating
+                                     })
+        
+    context = {
+        'services' : _services,
+        'object_services_income' : object_services_income
+    }
+    
+    return render(request, 'admin_dashboard_templates/services_sales.html', context)
+
+def load_client_home_cards(request):
+    client_email = request.session['email']
+    client_appointments = appointments.objects.filter(client_email = client_email).values()
+    count_appointment = client_appointments.count()
+    _upcoming_appointments = 0
+    _done_appointments = 0 
+    _canceled_appointments = 0
+    
+    for x in client_appointments:
+        _appointment_status = x['appointment_status']
+        
+        if _appointment_status == 'Confirmed':
+            _upcoming_appointments += 1
+        
+        elif _appointment_status == 'Done':
+            _done_appointments += 1
+        
+        elif _appointment_status == 'Canceled':
+            _canceled_appointments += 1
+    
+    context = {
+        'total_appointments' : count_appointment,
+        'upcoming' : _upcoming_appointments,
+        'done' : _done_appointments,
+        'canceled' : _canceled_appointments
+    }
+    return render(request, 'client_home_templates/client_cards.html', context)
+
+def load_client_home_table(request):
+    _upcoming_booking = appointments.objects.filter(appointment_status = 'Confirmed').values()
+    _sched = employee_schedule.objects.all().values()
+    _employee = authentication.objects.all().values()
+    _services = services.objects.all().values()
+    _booking_data = []
+    
+    for details in _upcoming_booking:
+        _booking_id = details['id']
+        
+        _employee_id = ''
+        
+        _service_img = ''
+        _service_name = ''
+        _service_price = 0
+        _booking_date = ''
+        _booking_time = ''
+        _service_assistant_name = ''
+        _service_assistant_email = ''
+        
+        for service_details in _services:
+            if service_details['id'] == details['service_id']:
+                _service_img += service_details['service_img']
+                _service_name += service_details['service_name']
+                _service_price += service_details['service_price']
+            
+                for sched_details in _sched:
+                    if sched_details['appointment_id'] == _booking_id:
+                        _employee_id += sched_details['employee_vid']
+                        _booking_date += sched_details['date']
+                        _booking_time += sched_details['time']
+
+                        for employee_details in _employee:
+                            if employee_details['v_id'] == _employee_id:
+                                _service_assistant_name += employee_details['first_name']+' '+employee_details['last_name']
+                                _service_assistant_email += employee_details['email']            
+         
+        _booking_data.append({
+            'img' : _service_img,
+            'service_name' : _service_name,
+            'price' : _service_price,
+            'date' : _booking_date,
+            'time' : _booking_time,
+            'assistant_name' : _service_assistant_name,
+            'assistant_email' : _service_assistant_email
+        })  
+            
+    context = {
+        'upcoming' : _booking_data
+    }
+    return render(request, 'client_home_templates/client_home_table.html', context)

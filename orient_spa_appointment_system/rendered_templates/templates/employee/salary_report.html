@@ -16,8 +16,8 @@
     </div>
     <div class="card-header">
         <div>
-            Total Days
-            <p class="float-end">{{record_count}} days</p>
+            Total Days Present
+            <p class="float-end">{{record_count}} {% if record_count > 1 %}days{% else %}day{% endif %}</p>
         </div>
     </div>
     <div class="card-header">
@@ -28,14 +28,20 @@
     </div>
     <div class="card-header">
         <div>
-            Lates (Mins./Hrs.)
-            <p class="float-end text-danger">{{late_hours}} hrs. </p>
+           Total Lates & Halfday (Mins./Hrs.)
+            <p class="float-end text-danger">{{late_hours}} hr/s. and {{late_minutes}} min/s.</p>
         </div>
     </div>
     <div class="card-header">
         <div>
-           Late Amount
+          Total Late Deductions
             <p class="float-end text-danger">- ₱ {{late_amount}}</p>
+        </div>
+    </div>
+    <div class="card-header">
+        <div>
+          Total Early Out Deductions
+            <p class="float-end text-danger">- ₱ {{early_out_amount}}</p>
         </div>
     </div>
     <div class="card-header">
@@ -46,7 +52,7 @@
     </div>
 </div>
 <div class="card-footer">
-    <button type="button" class="btn btn-secondary float-end">
+    <button type="button" id="printBtn" onclick="printSalaryReport()" class="btn btn-secondary float-end">
         <i class="fas fa-print"></i>
         Print
     </button>

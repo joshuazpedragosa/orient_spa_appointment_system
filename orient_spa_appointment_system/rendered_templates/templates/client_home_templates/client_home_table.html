@@ -1,0 +1,42 @@
+<div class="table-header">
+    <h4 class="mb-4">
+       Upcoming Appointment
+    </h4>
+ </div>
+ <table class="table align-middle table-responsive mb-0 bg-white">
+   <thead class="bg-light">
+     <tr>
+       <th>Service</th>
+       <th>Date/Time</th>
+       <th>Service Assistant</th>
+     </tr>
+   </thead>
+   <tbody>
+    {% for x in upcoming %}
+        <tr>
+            <td>
+            <div class="d-flex align-items-center">
+                <img
+                    src="../../media/{{x.img}}"
+                    alt=""
+                    style="width: 45px; height: 45px"
+                    class="rounded-circle"
+                    />
+                <div class="ms-3">
+                <p class="fw-bold mb-1">{{x.service_name}}</p>
+                <p class="text-muted mb-0">₱ {{x.price}}</p>
+                </div>
+            </div>
+            </td>
+            <td>
+            <p class="fw-normal mb-1">{{x.date}}</p>
+            <p class="text-muted mb-0">{{x.time}}</p>
+            </td>
+            <td>
+            <p class="fw-normal mb-1">{{x.assistant_name}}</p>
+            <p class="text-muted mb-0">{{x.assistant_email}}</p>
+            </td>
+        </tr>
+    {% endfor %}
+   </tbody>
+ </table>

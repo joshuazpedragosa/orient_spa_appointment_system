@@ -1,0 +1,91 @@
+<div class="col">
+    <div class="card text-center">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <i class="fas fa-hand-holding-dollar text-primary" style="font-size: 7rem;"></i>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">Total Monthly Income</h5>
+                <h2 class="card-text">
+                </h2>
+                <h4 class="card-text">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            {% if total_monthly_income > total_income_last_month %}
+                                <small class="text-success" style="font-size: 15px;">
+                                    <i class="fas fa-arrow-up-long"></i>
+                                    {{income_rating|floatformat:1}}%
+                                </small>
+                            {% elif total_monthly_income == total_income_last_month %}
+                                <small class="text-warning" style="font-size: 15px;">
+                                  <i class="fas fa-right-left"></i>
+                                  {{income_rating|floatformat:1}}%
+                                </small>
+                            {% else %}
+                                <small class="text-danger" style="font-size: 15px;">
+                                    <i class="fas fa-arrow-down-long"></i>
+                                    {{income_rating|floatformat:1}}%
+                                </small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="text-secondary">
+                                ₱ {{total_monthly_income}}
+                            </h3>
+                        </div>
+                    </div>
+                </h4>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <i class="fas fa-chart-line text-warning" style="font-size: 7rem;"></i>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">Services Total Ratings</h5>
+                <h2 class="card-text">
+                    {{rating|floatformat:1}}
+                    <i class="fas fa-star checked"></i>
+                </h2>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <i class="fas fa-calendar-xmark text-danger" style="font-size: 7rem;"></i>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">Canceled Rating</h5>
+                {% if canceled_current_month > canceled_last_month %}
+                    <h3 class="card-text text-danger">
+                        <i class="fas fa-arrow-up-long"></i>
+                        {{canceled_rating|floatformat:1}}%
+                    </h3>
+                {% elif canceled_current_month == canceled_last_month %}
+                    <h3 class="card-text text-warning">
+                      <i class="fas fa-right-left"></i>
+                      {{canceled_rating|floatformat:1}}%
+                    </h3>
+                {% else %}
+                <h3 class="card-text text-success">
+                    <i class="fas fa-arrow-down-long"></i>
+                    {{canceled_rating|floatformat:1}}%
+                </h3>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
