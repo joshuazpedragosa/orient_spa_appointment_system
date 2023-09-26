@@ -1,36 +1,49 @@
-{% for x in response %}
-{% for y in services %}
-{% if x.service_id == y.id %}
-  <div class="card mb-3" style="max-height: 560px;">
-    <div class="row g-0">
-      <div class="col-md-5 text-center">
-        <img
-          src="../../media/{{y.service_img}}"
-          alt="Trendy Pants and Shoes"
-          class="img-fluid rounded-start w-50"
-        />
-      </div>
-      <div class="col-md-5">
-        <div class="card-body">
-          <h5 class="card-title">{{x.service_name}}</h5>
-          <p class="card-text">
-            Price:  ₱ {{x.service_price}}
-          </p>
-          <p class="card-text">
-            Date: {{x.appointment_date}}
-          </p>
-          <p class="card-text">
-            Time: {{x.appointment_time}}
-          </p>
+{% if response %}
+  {% for x in response %}
+    {% for y in services %}
+    {% if x.service_id == y.id %}
+      <div class="card mb-3" style="max-height: 560px;">
+        <div class="row g-0">
+          <div class="col-md-5 text-center">
+            <img
+              src="../../media/{{y.service_img}}"
+              alt="Trendy Pants and Shoes"
+              class="img-fluid rounded-start w-50"
+            />
+          </div>
+          <div class="col-md-5">
+            <div class="card-body">
+              <h5 class="card-title">{{x.service_name}}</h5>
+              <p class="card-text">
+                Price:  ₱ {{x.service_price}}
+              </p>
+              <p class="card-text">
+                Date: {{x.appointment_date}}
+              </p>
+              <p class="card-text">
+                Time: {{x.appointment_time}}
+              </p>
+            </div>
+          </div>
+          <div class="card-footer text-muted text-center">
+            {% if x.id %}
+              <a href="#" class="btn btn-secondary" data-mdb-toggle="modal" data-mdb-target="#Modal" onclick="warningModal('{{ x.id }}')">Cancel Appointment</a>
+            {% endif %}
+          </div>
         </div>
       </div>
-      <div class="card-footer text-muted text-center">
-        {% if x.id %}
-          <a href="#" class="btn btn-secondary" data-mdb-toggle="modal" data-mdb-target="#Modal" onclick="warningModal('{{ x.id }}')">Cancel Appointment</a>
-        {% endif %}
+      {% endif %}
+      {% endfor %}
+    {% endfor %}
+{% else %}
+<div class="card mb-3 text-center" style="max-height: 560px;">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="fas fa-store-slash"></i>
+          No pending Appointment
+        </h5>
       </div>
+    <div class="card-footer text-muted text-center">
     </div>
-  </div>
-  {% endif %}
-  {% endfor %}
-{% endfor %}
+</div>
+{% endif %}

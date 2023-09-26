@@ -118,6 +118,14 @@ signin.addEventListener('click', function(event){
     auth.validate();
 })
 
+function navSignup(){
+    document.getElementById('tab-register').click()
+}
+
+function navLogin(){
+    document.getElementById('tab-login').click()
+}
+
 function loginAcc(){
     let credentials = {
         email : document.getElementById('emailLogin').value,

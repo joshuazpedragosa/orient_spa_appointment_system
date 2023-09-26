@@ -12,6 +12,7 @@
      </tr>
    </thead>
    <tbody>
+    {% if upcoming %}
     {% for x in upcoming %}
         <tr>
             <td>
@@ -38,5 +39,12 @@
             </td>
         </tr>
     {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="3">
+        No upcoming appointment.
+      </td>
+    </tr>
+    {% endif %}
    </tbody>
  </table>

@@ -1,11 +1,37 @@
 <div class="card-header text-center">
-    <h5 class="card-title">Salary Report For the Month of September</h5>
+    <h5 class="card-title">Salary Report For the Month of 
+        {% if month|add:0  == 1 %}
+            January
+        {% elif month|add:0  == 2 %}
+            February
+        {% elif month|add:0  == 3 %}
+            March
+        {% elif month|add:0  == 4 %}
+            April
+        {% elif month|add:0  == 5 %}
+            May
+        {% elif month|add:0  == 6 %}
+            June
+        {% elif month|add:0  == 7 %}
+            July
+        {% elif month|add:0  == 8 %}
+            August
+        {% elif month|add:0 == 9%}
+            September
+        {% elif month|add:0  == 10 %}
+            October
+        {% elif month|add:0  == 11 %}
+            November
+        {% elif month|add:0  == 12 %}
+            December  
+        {% endif %}
+    </h5>
     <h6 class="card-title">ORIENT SPA CALAPAN CITY</h6>
 </div> 
 <div class="card-body">
     <div class="card-header">
         <h5 class="card-title">
-            dsfsf asdsad
+            {{employee_name}}
         </h5>
     </div>
     <div class="card-header">

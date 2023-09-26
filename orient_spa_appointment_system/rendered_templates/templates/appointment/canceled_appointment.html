@@ -1,22 +1,3 @@
-<div class="input-group">
-    <span class="input-group-text">Month/Year</span>
-    <select id="monthSelect" onchange="selectDate()" class="form-control">
-        <option value="" class="text-primary">Choose Month</option>
-        <option value="1" {% if month|add:0 == 1 %}selected{% endif %}>January</option>
-        <option value="2" {% if month|add:0 == 2 %}selected{% endif %}>February</option>
-        <option value="3" {% if month|add:0 == 3 %}selected{% endif %}>March</option>
-        <option value="4" {% if month|add:0 == 4 %}selected{% endif %}>April</option>
-        <option value="5" {% if month|add:0 == 5 %}selected{% endif %}>May</option>
-        <option value="6" {% if month|add:0 == 6 %}selected{% endif %}>June</option>
-        <option value="7" {% if month|add:0 == 7 %}selected{% endif %}>July</option>
-        <option value="8" {% if month|add:0 == 8 %}selected{% endif %}>August</option>
-        <option value="9" {% if month|add:0 == 9 %}selected{% endif %}>September</option>
-        <option value="10" {% if month|add:0 == 10 %}selected{% endif %}>October</option>
-        <option value="11" {% if month|add:0 == 11 %}selected{% endif %}>November</option>
-        <option value="12" {% if month|add:0 == 12 %}selected{% endif %}>December</option>
-    </select>
-    <input type="number" id="dateInput" onclick="selectDate()" onchange="selectDate()" aria-label="Year" value="{{year}}" class="form-control" />
-</div>
 <table class="table align-middle mb-0 bg-white">
     <thead class="bg-light">
       <tr>

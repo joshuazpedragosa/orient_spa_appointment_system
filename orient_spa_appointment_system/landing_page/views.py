@@ -35,11 +35,12 @@ def veification(request):
     return render(request, 'verification_code.html', {'email' : email})
 
 def validate_priv(request):
-    if request.session['priv'] == 1:
-        return redirect('/admin_side/admin_dashboard/')
-    elif request.session['priv'] == 2:
-        return redirect('/home/')
-    elif request.session['priv'] == 3:
-        return redirect('/employee/employee_home/')
+    if 'priv' in request.session:
+        if request.session['priv'] == 1:
+            return redirect('/admin_side/admin_dashboard/')
+        elif request.session['priv'] == 2:
+            return redirect('/home/')
+        elif request.session['priv'] == 3:
+            return redirect('/employee/employee_home/')
     
     return redirect('/')

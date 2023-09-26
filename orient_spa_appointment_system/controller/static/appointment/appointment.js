@@ -6,6 +6,8 @@ const month = currentDate.getMonth() + 1;
 let new_year = year
 let new_month = month
 
+document.getElementById('dateInput').value = year
+
 function Spinner(){
     let spinner = `
                      <div style="display: flex; justify-content: center; margin-top: 20rem; overflow: hidden;">

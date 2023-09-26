@@ -210,14 +210,56 @@ def display_done_appointment(request):
     month = request.GET['a']
     year = request.GET['b']
     email = request.session['email']
-    done = appointments.objects.filter(client_email = email, appointment_status = 'Done').values()
+    _done = appointments.objects.filter(client_email = email, appointment_status = 'Done').values()
+    _sched = employee_schedule.objects.all().values()
+    _service = services.objects.all().values()
+    _done_appointment_data_set = []
     
-    for y in done:
-        app_id = y['id']
+    for done_appointment in _done:
+       _appointment_id = 0 
+       _service_image = ''
+       _service_name = ''
+       _service_price = 0
+       _date_appointed = ''
+       _time_appointed = ''
+       _status = ''
+       
+       _appointment_date = done_appointment['appointment_date']
+       splited_date = _appointment_date.split("-")
+       
+       _year = int(splited_date[0])
+       _month = int(splited_date[1])
+       
+       if _month == int(month) and _year == int(year):
+            for schedules in _sched:
+                if done_appointment['id'] == schedules['appointment_id']:
+                    _appointment_id += schedules['appointment_id']
+                    _date_appointed += schedules['date']
+                    _time_appointed += schedules['time']
+                    _status += schedules['status']
+                    for service in  _service:
+                        if done_appointment['service_id'] == service['id']:
+                            _service_image += service['service_img']
+                            _service_name += service['service_name']
+                            _service_price += service['service_price']
         
-    emp_sched = employee_schedule.objects.filter(appointment_id = app_id).values()
-    service = services.objects.all()
-    return render(request, 'appointment/done_appointment.html', {'response' : done, 'services' : service, 'emp' : emp_sched, 'month' : month, 'year' : year})
+        
+       if _appointment_id != 0:                    
+            _done_appointment_data_set.append({
+                'id' : _appointment_id,
+                'service_image' : _service_image,
+                'service_name' : _service_name,
+                'service_price' : _service_price,
+                'date' : _date_appointed,
+                'time' : _time_appointed,
+                'status' : _status
+                })
+       
+    context = {
+         'appointment_data_set' : _done_appointment_data_set
+     }  
+        
+    return render(request, 'appointment/done_appointment.html', context)
 
 def display_confirmed_appointment(request):
     email = request.session['email']
@@ -648,10 +690,16 @@ def calculate_salary(request):
     records = dtr_record.objects.filter(employee_vid = v_id, month = month+''+year).values()
     _count = records.count()
     
+    employee_name = ''
     record_count = _count
     late_hours = 0
     late_minutes = 0
     early_out_amount = 0
+    
+    employee = authentication.objects.filter(v_id = v_id).values()
+    
+    for name in employee:
+        employee_name += name['first_name'] + ' ' + name['last_name']
     
     for x in records:
         record_am_in = x['am_in']
@@ -763,7 +811,9 @@ def calculate_salary(request):
         'late_minutes' : late_minutes,
         'late_amount' : total_late_amount,
         'early_out_amount' : early_out_amount,
-        'total' : total_salary
+        'total' : total_salary,
+        'month' : month,
+        'employee_name' : employee_name
     }
     
     return render(request, 'employee/salary_report.html', context)
@@ -994,7 +1044,7 @@ def load_client_home_cards(request):
     return render(request, 'client_home_templates/client_cards.html', context)
 
 def load_client_home_table(request):
-    _upcoming_booking = appointments.objects.filter(appointment_status = 'Confirmed').values()
+    _upcoming_booking = appointments.objects.filter(appointment_status = 'Confirmed', client_email = request.session['email']).values()
     _sched = employee_schedule.objects.all().values()
     _employee = authentication.objects.all().values()
     _services = services.objects.all().values()
