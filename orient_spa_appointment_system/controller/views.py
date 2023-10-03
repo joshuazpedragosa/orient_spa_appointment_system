@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
 from controller.models import *
 from django.core.mail import send_mail
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.contrib.auth.hashers import make_password,check_password
 from django.utils.html import strip_tags
 from django.db.models import Sum
 from datetime import datetime
+from .sms_utility import send_sms
 import uuid
 import random
 
@@ -145,7 +147,7 @@ def save_appointment(request):
         appointments.objects.create(
             client_name = request.session['first_name']+' '+request.session['last_name'],
             client_email = request.session['email'],
-            client_number = data['phone_num'],
+            client_number = data['phone_number'],
             appointment_date = data['date'],
             appointment_time = new_time,
             service_id = data['service'],
@@ -349,6 +351,11 @@ def confirm_appointment(request):
         if get_appointment.appointment_status == 'Pending':
             get_appointment.appointment_status = 'Confirmed'
             get_appointment.save()
+            
+            sms_message = 'Your appointment was confirmed!'
+            recipient = get_appointment.client_number
+            
+            send_sms(sms_message, recipient)
             
             employee_schedule.objects.create(
                 employee_vid = data['employee'],
@@ -913,11 +920,13 @@ def load_sales_revenue(request):
     _ratings = ratings_comments.objects.all().values()
     total_ratings_number = _ratings.count()
     ratings_sum = 0
+    _total_rating = 0
     
     for x in _ratings:
         ratings_sum += x['ratings']
     
-    _total_rating = ratings_sum / total_ratings_number
+    if ratings_sum != 0 and total_ratings_number != 0:
+        _total_rating = ratings_sum / total_ratings_number
     
     #get monthly canceled appointment ratings comparing last month and present
     if canceled_current_month != 0:
@@ -1094,3 +1103,171 @@ def load_client_home_table(request):
         'upcoming' : _booking_data
     }
     return render(request, 'client_home_templates/client_home_table.html', context)
+
+#settings server sides
+def logout_view(request):
+    return render(request, 'navbar/logout.html')
+
+def validate_admin_account(request):
+    admin_email = request.session['email']
+    admin_auth = authentication.objects.get(email = admin_email)
+    
+    if admin_auth.email == 'admin' or check_password('admin', admin_auth.password):
+        return JsonResponse({'msg' : 'default'})
+    else:
+        return JsonResponse({'msg' : 'valid'})
+    
+def settings_view(request):
+    client_settings_request = request.GET['req']
+    
+    if client_settings_request == 'account_settings':
+        return render(request, 'settings/account_settings.html')
+    
+    elif client_settings_request == 'account_details':
+        return render(request, 'settings/view_account_details.html')
+    else:
+        return render(request, 'settings/delete_account.html')
+
+def account_update_email_notif(old_email, email):
+    _v_email  = ''
+    
+    if email != old_email:
+        html_message = render_to_string('email.html', 
+                                    {'header': 'Email Updated', 
+                                        'title': 'Your email was changed.',
+                                        'text': 'We will send a verification code once you log in to your account'}
+                                    )
+        _v_email += email
+        
+    else: 
+        html_message = render_to_string('email.html', 
+                                    {'header': 'Password Updated', 
+                                        'title': 'Your password was changed.',
+                                        'text': 'Please log in to your account using your new password.'}
+                                    )
+        _v_email += old_email
+        
+    plain_message = strip_tags(html_message)
+        
+    sent_count =send_mail(
+        "Orient SPA account verification Code",
+        plain_message,
+        settings.EMAIL_HOST_USER,
+        [_v_email],
+        fail_silently=False,
+        html_message=html_message
+        )
+    return sent_count
+    
+#check what data does the user updated
+@api_view(['POST'])    
+def updateAccount(request):
+    data = request.data
+    
+    _check_email = authentication.objects.filter(email = data['email'])
+    _user_auth = authentication.objects.get(v_id = request.session['v_id'])
+    _old_password = _user_auth.password
+    
+    if data['f_name'] == _user_auth.first_name and data['l_name'] == _user_auth.last_name and data['email'] == _user_auth.email and data['new_pass'] == '':
+        return Response({'msg' : 'Nothing to update'})
+    if _check_email.exists() and data['email'] != request.session['email']:
+        return Response({'msg' : 'Email already exist.'})
+    
+    if data['new_pass'] != '' and data['new_pass'] != data['c_pass']:
+        return Response({'msg' : 'Passwords dont match'})
+    
+    if check_password(data['new_pass'], _old_password):
+        return Response({'msg' : 'You cannot use password the same with your old password'})
+    
+    if not check_password(data['new_pass'], _old_password) and data['new_pass'] == data['c_pass'] and data['new_pass'] != '' and data['email'] == 'admin':
+        return Response({'msg' : 'Password cannot change with default email "admin". Please change your email'})
+    
+    if not check_password(data['new_pass'], _old_password) and data['new_pass'] == data['c_pass'] and data['new_pass'] != '':
+        _user_auth.password = make_password(data['new_pass'])
+        _user_auth.save()
+        
+        account_update_email_notif( request.session['email'] ,data['email'])
+    
+    _user_auth.first_name = data['f_name']
+    _user_auth.last_name = data['l_name']
+    _user_auth.save()
+    
+    if data['email'] != request.session['email']:
+        _email_response = account_update_email_notif( request.session['email'] ,data['email'])
+        if _email_response == 1:
+            _user_auth.email = data['email']
+            _user_auth.v_status = 'unverified'
+            _user_auth.save()
+    
+        return Response({'msg' : 200})
+    
+    else:
+        return Response({'msg' : 200})
+
+@api_view(['POST'])
+def delete_account(request):
+    data = request.data
+    
+    _services = services.objects.all()
+    _appointments = appointments.objects.all()
+    _scheduled = employee_schedule.objects.all()
+    _rating = ratings_comments.objects.all()
+    _reply = replies_comment.objects.all()
+    _user_account = authentication.objects.get(email = request.session['email'])
+    
+    if not check_password(data['admin_pass'], _user_account.password):
+        return Response({'msg' : 'Incorrect Password.'})
+    
+    _user_account.delete()
+    
+    if request.session['priv'] == 1:
+        _services.delete()
+        _appointments.delete()
+        _scheduled.delete()
+        _rating.delete()
+        _reply.delete()
+        
+    if request.session['priv'] == 2:
+        _client_appointments = appointments.objects.filter(client_email = request.session['email'])
+        if _client_appointments.exists():
+            _client_appointments.delete()
+        
+        _client_rating  = ratings_comments.objects.filter(user_id = request.session['v_id'])
+        if _client_rating.exists():
+            _client_rating.delete()
+    
+    return Response({'msg' : 200})
+
+@api_view(['POST'])
+def send_change_pass_link(request):
+    data = request.data
+    user_auth = authentication.objects.get(email = data['email'])
+    
+    html_message = render_to_string('settings/change_pass_email.html', 
+                                    {'email' : data['email'],
+                                     'v_id' : user_auth.v_id}
+                                        )
+    plain_message = strip_tags(html_message)
+        
+    sent_count =send_mail(
+        "Orient SPA Forgot Password Link",
+        plain_message,
+        settings.EMAIL_HOST_USER,
+        [data['email']],
+        fail_silently=False,
+        html_message=html_message
+        )
+    if sent_count == 1:
+        return Response({'msg' : 200})
+    
+    return Response({'msg' : 'Something went wrong.'})
+
+@api_view(['POST'])
+def update_user_password(request):
+    data = request.data
+    
+    _user = authentication.objects.get(email = data['email'])
+    _user.password = make_password(data['new_pass'])
+    _user.save()
+    
+    return Response({'msg' : 200})

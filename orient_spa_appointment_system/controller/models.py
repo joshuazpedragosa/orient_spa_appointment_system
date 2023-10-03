@@ -20,7 +20,7 @@ class services(models.Model):
     service_name = models.CharField(max_length=100, null=False, default='')
     service_price = models.IntegerField(default=0, null=False)
     service_img = models.ImageField(upload_to='image_uploads')
-    service_description = models.CharField(max_length=250, null=False, default='')
+    service_description = models.CharField(max_length=10000, null=False, default='')
     service_status = models.CharField(max_length=20, null=False, default='active')
     
     class Meta:
@@ -29,7 +29,7 @@ class services(models.Model):
 class appointments(models.Model):
     client_name = models.CharField(max_length=100, null=False, default='')
     client_email = models.CharField(max_length=100, null=False, default='')
-    client_number = models.IntegerField(default=0, null=False)
+    client_number = models.CharField(max_length=20, null=False, default='')
     appointment_date = models.CharField(max_length=100, null=False, default='')
     appointment_time = models.CharField(max_length=100, null=False, default='')
     service_id = models.IntegerField(default=0, null=False)

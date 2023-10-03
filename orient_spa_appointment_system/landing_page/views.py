@@ -44,3 +44,17 @@ def validate_priv(request):
             return redirect('/employee/employee_home/')
     
     return redirect('/')
+
+def forgot_password(request):
+    return render(request, 'forgot_password.html')
+
+def change_password_template(request):
+    email = request.GET['email']
+    v_id = request.GET['v_id']
+    
+    user_id = authentication.objects.filter(v_id = v_id)
+    
+    if 'email' in request.GET and 'v_id' in request.GET and user_id.exists():
+        return render(request, 'change_password.html',{'email' : email})
+    else:
+        return render(request, 'sadhkiWkaacopkikoS.html')

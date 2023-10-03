@@ -40,6 +40,7 @@ class appointment{
         .catch(error => {
             console.error('api error: ', error);
         })
+        // alert(JSON.stringify(this.objects))
     }
 
     cancel(){
@@ -79,14 +80,32 @@ class appointment{
 }
 
 function saveAppointment(){
-    let appointment_data = {
-        phone_num : document.getElementById('phoneNumber').value,
-        date : document.getElementById('appointmentDate').value,
-        time : document.getElementById('time').value,
-        service : document.getElementById('services').value
+    let phone_num = document.getElementById('client_phone_number').value
+    let splitted_num = phone_num.split('')
+
+    if (phone_num.length !== 11){
+        alert('Phone number is not valid.')
+        return false;
     }
 
-    if(appointment_data.phone_num === '' || appointment_data.date === '' || appointment_data.time === '' || appointment_data.service === ''){
+    for(let x = 0; x < phone_num.length; x++){
+        if (isNaN(splitted_num[x])){
+            console.log('Phone number dont require letters or any special characters.')
+            break;
+        }
+    }
+
+    let _str_num = phone_num.toString()
+    let phone_number ='+63' + _str_num.substring(1)
+
+    let appointment_data = {
+        'phone_number' : phone_number,
+        'date' : document.getElementById('appointmentDate').value,
+        'time' : document.getElementById('time').value,
+        'service' : document.getElementById('services').value
+    }
+
+    if(appointment_data.phone_number === '' || appointment_data.date === '' || appointment_data.time === '' || appointment_data.service === ''){
         alert('Please fillout the details')
     }
     else if(new Date() >  new Date(appointment_data.date)){
@@ -95,6 +114,7 @@ function saveAppointment(){
     else{
         const new_appointment = new appointment(appointment_data)
         new_appointment.save()
+        // alert(JSON.stringify(appointment_data))
     }
 }
 

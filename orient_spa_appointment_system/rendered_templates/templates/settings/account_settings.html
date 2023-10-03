@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <button type="button" class="btn btn-outline-secondary" onclick="returnBtn()" data-mdb-ripple-color="#000000"> 
+            <i class="fas fa-angle-left"></i> 
+        </button>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">
+            <i class="fas fa-user-gear"></i>
+            Change User Details
+        </h4>
+        <div class="input-group">
+            <span class="input-group-text">First and last name</span>
+            <input type="text" aria-label="First name" id="f_name" value="{{request.session.first_name}}" class="form-control" />
+            <input type="text" aria-label="Last name" id="l_name" value="{{request.session.last_name}}" class="form-control" />
+        </div><br>
+        <div class="input-group">
+            <span class="input-group-text">Email</span>
+            <input type="email" aria-label="Email" {% if request.session.priv == 2 %}readonly{% endif %} id="email" value="{{request.session.email}}" class="form-control" />
+        </div>
+        <br>
+        <div>
+            <h4 class="mb-3">
+                <i class="fas fa-key"></i>
+                Change Password
+            </h4>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">New Password</span>
+            <input type="password" aria-label="Password" id="pass" class="form-control" />
+        </div><br>
+        <div class="input-group">
+            <span class="input-group-text">Confirm Password</span>
+            <input type="password" aria-label="Confirm Password" id="cpass" class="form-control" />
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" onchange='showPass()' id="flexCheckDefault" />
+            <label class="form-check-label" for="flexCheckDefault">Show Passwords</label>
+          </div>
+        <br>
+        <div class="text-center">
+            <a class="btn text-white" onclick="updateAccount()" style="background-color: #55acee;" href="#!" role="button">
+                <i class="fas fa-arrows-rotate"></i>
+                Update User Details
+            </a>
+        </div>
+    </div>
+  </div>

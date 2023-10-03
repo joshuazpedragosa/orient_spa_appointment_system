@@ -121,7 +121,7 @@ function delSession(){
     })
     .then(response => response.json())
     .then(data => {
-        data['msg'] === 200 ? location.href ='/' : null
+        data['msg'] === 200 ? location.href ='/controller/logout_view/' : null
     })
     .catch(error => {
         alert('Something went wrong! Please check your internet connection.')

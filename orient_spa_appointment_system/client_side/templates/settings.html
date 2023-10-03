@@ -102,13 +102,18 @@
           Settings
         </h4>
       </div>
-      <button type="button" class="btn btn-outline-secondary   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-user-gear ms-1"></i> Account Settings</button>
-      <button type="button" class="btn btn-outline-secondary   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-eye ms-1"></i> View Account Details</button>
-      <button type="button" class="btn btn-outline-danger   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-user-alt-slash ms-1"></i> Delete Account</button>
+
+      <div id="settings_content">
+        <button type="button" onclick="navSettings(this)" id="account_settings"  class="btn btn-outline-secondary   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-user-gear ms-1"></i> Account Settings</button>
+        <button type="button" hidden onclick="navSettings(this)" id="account_details" class="btn btn-outline-secondary   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-eye ms-1"></i> View Account Details</button>
+        <button type="button" onclick="navSettings(this)" id="delete_account" class="btn btn-outline-danger   btn-block btn-lg" data-mdb-ripple-color="#000000"> <i class="fas fa-user-alt-slash ms-1"></i> Delete Account</button>
+      </div>
     </div>
   </main>
+  <button hidden id="spinnerTrigger" data-mdb-toggle="modal" data-mdb-target="#Modal"></button>
   <!--Main layout-->
   <script src="{% static 'js/modal_content.js' %}"></script>
+  <script src="{% static 'settings_api/settings.js' %}"></script>
   {% include 'modal/modal.html' %}
 </body>
 </html>

@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-header">
+        <button type="button" class="btn btn-outline-secondary" onclick="returnBtn()" data-mdb-ripple-color="#000000"> 
+            <i class="fas fa-angle-left"></i> 
+        </button>
+    </div>
+    <div class="card-body">
+        <div>
+            <h4 class="mb-3 text-danger">
+                <i class="fas fa-triangle-exclamation"></i>
+                Delete Account
+            </h4>
+            <div class="text-center">
+                <h6 class="text-warning">
+                    <i class="fas fa-circle-exclamation"></i>
+                    Note
+                </h6>
+                <h5 class="card-text text-warning">
+                   Deleting your account will also delete all your personal data including
+                   (Comments, Appointments, Account Informations) etc.
+                </h5>
+                {% if request.session.priv == 1 %}
+                <h4 class="card-text text-danger">
+                    (<i class="fas fa-circle-exclamation"></i>
+                    Deleting Admin account will delete all services and appointments of clients including appointment history.)
+                </h4>
+                {% endif %}
+            </div>
+            <br>
+        </div>
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">Password</span>
+            <input type="password" id="admin_password" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="addon-wrapping" />
+        </div><br>
+        <div class="text-center">
+            <button type="button" onclick="deleteAccountValidation()" class="btn btn-secondary">
+                Continue
+                <i class="fas fa-arrow-right-long"></i>
+            </button>
+        </div>
+    </div>
+  </div>

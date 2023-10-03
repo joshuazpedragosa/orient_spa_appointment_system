@@ -71,10 +71,15 @@
                                     </div>
                   
                                     <div class="form-outline mb-4">
-                                      <input type="password" id="Loginpassword" style="border: 1px solid gray;" class="form-control" />
+                                      <input type="password" id="Loginpassword" style="border: 1px solid gray;" class="form-control pass" />
                                       <label class="form-label" for="Loginpassword">Password</label>
                                     </div>
-                  
+
+                                    <div class="form-check">
+                                      <input class="form-check-input" onchange="showPassword()" type="checkbox" value="" id="flexCheckDefault" />
+                                      <label class="form-check-label" for="flexCheckDefault">Show Password</label>
+                                    </div>
+
                                     <div class="text-center pt-1 mb-5 pb-1">
                                       <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" id="loginBtn" onclick="loginAcc()"  type="button">
                                         Log in
@@ -83,7 +88,7 @@
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         Signing in...
                                     </button>
-                                      <a class="text-muted" href="#!">Forgot password?</a>
+                                      <a class="text-muted" href="{% url "forgot_password" %}">Forgot password?</a>
                                     </div>
                   
                                     <div class="d-flex align-items-center justify-content-center pb-4">
@@ -162,14 +167,18 @@
                                 
                                     <!-- Password input -->
                                     <div class="form-outline mb-4">
-                                    <input type="password" id="pass" style="border: 1px solid gray;" class="form-control" />
+                                    <input type="password" id="pass" style="border: 1px solid gray;" class="form-control pass" />
                                     <label class="form-label" for="pass">Password</label>
                                     </div>
                                 
                                     <!-- Repeat Password input -->
                                     <div class="form-outline mb-4">
-                                    <input type="password" id="c_pass" style="border: 1px solid gray;" class="form-control" />
+                                    <input type="password" id="c_pass" style="border: 1px solid gray;" class="form-control pass" />
                                     <label class="form-label" for="c_pass">Repeat password</label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" onchange="showPasswordRegister()" type="checkbox" value="" id="flexCheckDefault1" />
+                                      <label class="form-check-label" for="flexCheckDefault">Show Password</label>
                                     </div>
                   
                                     <div class="text-center pt-1 mb-5 pb-1">

@@ -187,3 +187,30 @@ function submitCode(email){
      const submit = new authentication(code)
      submit.verifyCode()
 }
+
+function showPassword(){
+    let checkbox = document.getElementById('flexCheckDefault')
+    let password_input = document.querySelector('.pass')
+
+    if (checkbox.checked){
+        password_input.type = 'text'
+    }
+    else{
+        password_input.type = 'password'
+    }
+}
+
+function showPasswordRegister(){
+    let checkbox1 = document.getElementById('flexCheckDefault1')
+    let password_input = document.querySelector('#pass')
+    let password_input1 = document.querySelector('#c_pass')
+
+    if (checkbox1.checked){
+        password_input.type = 'text'
+        password_input1.type = 'text'
+    }
+    else{
+        password_input.type = 'password'
+        password_input1.type = 'password'
+    }
+}
