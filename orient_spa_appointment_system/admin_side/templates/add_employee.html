@@ -127,6 +127,65 @@
     </div>
   </main>
   <!--Main layout-->
+
+  <script>
+    function employmentData(v_id){
+      const modalContent = `<div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5>Update Basic Monthly Pay</h5>
+            <h5 class="modal-title" id="exampleModalLabel"></h5>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+          <input type="text" value="${v_id}" id="Vid" hidden required />
+        <div class="input-group rounded mb-2">
+            <input type="number" class="form-control rounded" id="salary" placeholder="Monthly Pay" aria-label="Search" aria-describedby="search-addon" required />
+        </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+            <button type="button" onclick="updateSalary()" class="btn btn-primary">Update</button>
+        </div>
+        </div>
+    </div>`;
+  
+    document.getElementById('Modal').innerHTML = modalContent;
+    }
+
+    function updateSalary(){
+        let v_id = document.getElementById('Vid');
+        let salary = document.getElementById('salary');
+
+        if(salary.value == '') {
+          alert('Please add salary value!');
+          return false
+        }
+
+        const data = {
+          v_id : v_id.value,
+          salary : salary.value
+        }
+
+        fetch('/controller/update_salary/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+             alert(data.msg)
+          })
+          .catch(error => {
+              console.log('api error: ', error)
+              alert('Something went wrong.')
+          })
+    }
+  </script>
   <script src="{% static 'js/modal_content.js' %}"></script>
   <script src="{% static 'employee/employee.js' %}"></script>
   <script src="{% static 'settings_api/admin_edit_account_notice.js' %}"></script>

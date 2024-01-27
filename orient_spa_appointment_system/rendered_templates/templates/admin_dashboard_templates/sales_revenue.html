@@ -1,37 +1,38 @@
+
 <div class="col">
     <div class="card text-center">
         <div class="row g-0">
             <div class="col-md-4">
-                <i class="fas fa-hand-holding-dollar text-primary" style="font-size: 7rem;"></i>
+                <i class="fas fa-dollar-sign" style="font-size: 7rem; color: #FFD700;"></i>
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">Total Monthly Income</h5>
+                <h5 class="card-title">Total Weekly Income</h5>
                 <h2 class="card-text">
                 </h2>
                 <h4 class="card-text">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            {% if total_monthly_income > total_income_last_month %}
+                            {% if total_weekly_income > total_income_last_week %}
                                 <small class="text-success" style="font-size: 15px;">
                                     <i class="fas fa-arrow-up-long"></i>
-                                    {{income_rating|floatformat:1}}%
+                                    {{weekly_rating|floatformat:1}}%
                                 </small>
-                            {% elif total_monthly_income == total_income_last_month %}
+                            {% elif total_weekly_income == total_income_last_week %}
                                 <small class="text-warning" style="font-size: 15px;">
                                   <i class="fas fa-right-left"></i>
-                                  {{income_rating|floatformat:1}}%
+                                  {{weekly_rating|floatformat:1}}%
                                 </small>
                             {% else %}
                                 <small class="text-danger" style="font-size: 15px;">
                                     <i class="fas fa-arrow-down-long"></i>
-                                    {{income_rating|floatformat:1}}%
+                                    {{weekly_rating|floatformat:1}}%
                                 </small>
                             {% endif %}
                         </div>
                         <div class="col-md-8">
                             <h3 class="text-secondary">
-                                ₱ {{total_monthly_income}}
+                                ₱ {{total_weekly_income}}
                             </h3>
                         </div>
                     </div>
@@ -41,6 +42,99 @@
           </div>
     </div>
   </div>
+
+
+  
+<div class="col">
+  <div class="card text-center">
+      <div class="row g-0">
+          <div class="col-md-4">
+              <i class="fas fa-hand-holding-dollar text-primary" style="font-size: 7rem;"></i>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Total Monthly Income</h5>
+              <h2 class="card-text">
+              </h2>
+              <h4 class="card-text">
+                  <div class="row g-0">
+                      <div class="col-md-4">
+                          {% if total_monthly_income > total_income_last_month %}
+                              <small class="text-success" style="font-size: 15px;">
+                                  <i class="fas fa-arrow-up-long"></i>
+                                  {{income_rating|floatformat:1}}%
+                              </small>
+                          {% elif total_monthly_income == total_income_last_month %}
+                              <small class="text-warning" style="font-size: 15px;">
+                                <i class="fas fa-right-left"></i>
+                                {{income_rating|floatformat:1}}%
+                              </small>
+                          {% else %}
+                              <small class="text-danger" style="font-size: 15px;">
+                                  <i class="fas fa-arrow-down-long"></i>
+                                  {{income_rating|floatformat:1}}%
+                              </small>
+                          {% endif %}
+                      </div>
+                      <div class="col-md-8">
+                          <h3 class="text-secondary">
+                              ₱ {{total_monthly_income}}
+                          </h3>
+                      </div>
+                  </div>
+              </h4>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+
+  <div class="col">
+    <div class="card text-center">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <i class="fas fa-peso-sign" style="font-size: 7rem; color: #75816b;"></i>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">Total Annual Income</h5>
+                <h2 class="card-text">
+                </h2>
+                <h4 class="card-text">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            {% if total_annual_income > total_income_last_year %}
+                                <small class="text-success" style="font-size: 15px;">
+                                    <i class="fas fa-arrow-up-long"></i>
+                                    {{annual_rating|floatformat:1}}%
+                                </small>
+                            {% elif total_annual_income == total_income_last_year %}
+                                <small class="text-warning" style="font-size: 15px;">
+                                  <i class="fas fa-right-left"></i>
+                                  {{annual_rating|floatformat:1}}%
+                                </small>
+                            {% else %}
+                                <small class="text-danger" style="font-size: 15px;">
+                                    <i class="fas fa-arrow-down-long"></i>
+                                    {{annual_rating|floatformat:1}}%
+                                </small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="text-secondary">
+                                ₱ {{total_annual_income}}
+                            </h3>
+                        </div>
+                    </div>
+                </h4>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+
+
+
   <div class="col">
     <div class="card text-center">
         <div class="row g-0">

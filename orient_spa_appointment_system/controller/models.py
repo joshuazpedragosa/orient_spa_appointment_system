@@ -50,6 +50,13 @@ class employee_schedule(models.Model):
     class Meta:
         db_table = 'tbl_employee_schedule'
         
+class employment_data(models.Model):
+    employee_v_id = models.CharField(max_length=200, null= False, default = '')
+    basic_monthly_pay = models.IntegerField(default = 0, null = False)
+    
+    class Meta: 
+        db_table = 'tbl_employment_data'
+        
 class dtr_record(models.Model):
     employee_vid = models.CharField(max_length=200, null=False, default='')
     am_in = models.CharField(max_length=20, null=True, default='')

@@ -352,10 +352,19 @@ def confirm_appointment(request):
             get_appointment.appointment_status = 'Confirmed'
             get_appointment.save()
             
-            sms_message = 'Your appointment was confirmed!'
+            sms_header = 'Your appointment was confirmed!'
+            sms_message = (
+                f"Good Day! Your appointment to our service ({appointments.service_name}) "
+                f"was confirmed. Schedule Details: {appointments.appointment_date} "
+                f"({appointments.appointment_time})"
+            )
+
+            html_message = render_to_string('email_template/text_message.html', {'header': sms_header, 'msg': sms_message, 'name' : appointments.client_name})
+            plain_message = strip_tags(html_message)
+            
             recipient = get_appointment.client_number
             
-            send_sms(sms_message, recipient)
+            send_sms(plain_message, recipient)
             
             employee_schedule.objects.create(
                 employee_vid = data['employee'],
@@ -685,8 +694,17 @@ def employee_dtr(request):
 def displayMonthlyRate(request):
     user_verification_id = request.GET['v_id']
     employee = authentication.objects.filter(v_id = user_verification_id).values()
+        
+    _get_employment_data = employment_data.objects.filter(employee_v_id = user_verification_id).values()
     
-    return render(request, 'employee/monthly_rate.html',{'employee' : employee})
+    
+    salary = 0
+    
+    for data in _get_employment_data:
+        salary += data['basic_monthly_pay']
+        break
+    
+    return render(request, 'employee/monthly_rate.html',{'employee' : employee, 'salary' : salary})
 
 def calculate_salary(request):
     v_id = request.GET['id']
@@ -852,15 +870,34 @@ def load_sales_revenue(request):
     current_datetime = datetime.now()
     current_month = current_datetime.month
     current_year = current_datetime.year
+    current_day = current_datetime.day
+    
+    #weekly income
+    total_weekly_income = 0
     
     #income this month
     total_monthly_income = 0
     
+    #annual income
+    total_annual_income = 0
+    
+    #income last week
+    total_income_last_week = 0
+    
     #income last month
     total_income_last_month = 0
     
+    #income last year
+    total_income_last_year = 0
+    
+    #weekly ratings
+    weekly_rating = 0
+    
     #income increase or decrease rating
     income_rating = 0
+    
+    #annual ratings
+    annual_rating = 0
     
     #canceled appointment in current month
     canceled_current_month = 0
@@ -882,6 +919,48 @@ def load_sales_revenue(request):
         
         year = int(splited_date[0])
         month = int(splited_date[1])
+        day = int(splited_date[2])
+        
+        if year == current_year:
+            if appointment_status == 'Done':
+                total_annual_income += _price
+                
+        if year == (current_year - 1):
+            if appointment_status == 'Done':
+                total_income_last_year += _price
+        
+        #weekly calculation        
+        if current_day >= 7 and current_month == month:
+            start_day = current_day - 7
+            
+            for x in range((start_day + 1), (current_day + 1)):
+                 if x == day:
+                     total_weekly_income += _price
+                     break
+        
+        # weekly calculation for month between February and March
+        if current_day < 7 and current_month == 3:
+            month_excess_days = 7 - current_day
+            start_day_last_month = 29 - month_excess_days
+            
+            for x in range((start_day_last_month + 1), 30):
+                if x > day and x <= 29 and (month - 1) == 2:
+                    total_weekly_income += _price
+                    break
+                    
+            for x in range(1, (current_day + 1)):
+                if x >= 1 and x <= day:
+                    total_weekly_income += _price
+                    break
+                
+        #calculate total income last week
+        if current_day >= 14 and current_month == month:
+            start_day_last = current_day - 14
+            
+            for x in range((start_day_last + 1), (current_day - 6)):
+                if x == day:
+                    total_income_last_week += _price
+                    break
         
         if year == current_year and month == current_month:
             if appointment_status == 'Done':
@@ -904,6 +983,21 @@ def load_sales_revenue(request):
                     
                 if appointment_status == 'Canceled':
                     canceled_last_month += 1
+    
+    #weekly ratings
+    if total_weekly_income != 0:
+        if total_weekly_income >= total_income_last_week:
+            weekly_product = total_income_last_week * 100
+            weekly_percent = weekly_product / total_weekly_income
+            weekly_rating += 100 - weekly_percent
+        else:
+            _weekly_product = total_weekly_income * 100
+            _weekly_percent = _weekly_product / total_income_last_week
+            weekly_rating += 100 - _weekly_percent
+    elif total_weekly_income == 0 and total_income_last_week != 0:
+        weekly_rating += 100
+       
+    #monthly ratings             
     if total_monthly_income != 0:
         if total_monthly_income >= total_income_last_month:
             product = total_income_last_month * 100
@@ -915,6 +1009,19 @@ def load_sales_revenue(request):
             income_rating += 100 - _percent
     elif total_monthly_income == 0 and total_income_last_month != 0:
         income_rating += 100
+        
+    #annual ratings
+    if total_annual_income != 0:
+        if total_annual_income >= total_income_last_year:
+            annual_product = total_income_last_year * 100
+            annual_percent = annual_product / total_annual_income
+            annual_rating = 100 - annual_percent
+        else:
+            _annual_product = total_annual_income * 100
+            _annual_percent = _annual_product / total_income_last_year
+            annual_rating = 100 - _annual_percent
+    elif total_annual_income == 0 and total_income_last_year != 0:
+        annual_rating = 100
 
     #Get overall services ratings
     _ratings = ratings_comments.objects.all().values()
@@ -942,8 +1049,14 @@ def load_sales_revenue(request):
         canceled_rating += 100
     
     context = {
+        'total_weekly_income' : total_weekly_income,
         'total_monthly_income' : total_monthly_income,
+        'total_annual_income' : total_annual_income,
+        'total_income_last_week' : total_income_last_week,
+        'total_income_last_year' : total_income_last_year,
+        'weekly_rating' : weekly_rating,
         'income_rating' : income_rating,
+        'annual_rating' : annual_rating,
         'total_monthly_income' : total_monthly_income,
         'total_income_last_month' : total_income_last_month,
         'rating' : _total_rating,
@@ -1271,3 +1384,22 @@ def update_user_password(request):
     _user.save()
     
     return Response({'msg' : 200})
+
+@api_view(['POST'])
+def update_salary(request):
+    data = request.data
+    
+    _emp_data = employment_data.objects.filter(employee_v_id = data['v_id'])
+    
+    if _emp_data.exists():
+        _update_data = employment_data.objects.get(employee_v_id = data['v_id'])
+        _update_data.basic_monthly_pay = data['salary']
+        _update_data.save()
+        return Response({'msg': 'Salary Updated!'})
+    
+    employment_data.objects.create(
+        employee_v_id = data['v_id'],
+        basic_monthly_pay = data['salary']
+    )
+    
+    return Response({'msg': 'Salary Updated!'})

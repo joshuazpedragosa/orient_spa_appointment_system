@@ -52,5 +52,6 @@ urlpatterns = [
    path('logout_view/', views.logout_view, name='logout_view'),
    path('delete_account/', views.delete_account, name='delete_account'),
    path('send_change_pass_link/', views.send_change_pass_link, name='send_change_pass_link'),
-   path('update_user_password/', views.update_user_password, name='update_user_password')
+   path('update_user_password/', views.update_user_password, name='update_user_password'),
+   path('update_salary/', views.update_salary, name='update_salary')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
