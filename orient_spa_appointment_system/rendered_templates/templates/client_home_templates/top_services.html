@@ -1,0 +1,41 @@
+<div class="table-header">
+    <h4 class="mb-4">
+       Top Services
+    </h4>
+ </div><br>
+
+
+{% if data %}
+ {% for x in data %}
+<div class="col-sm-6">
+  <div class="card mb-3" style="max-width: 540px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img
+            src="../../media/{{x.service_img}}" 
+            alt="Service Image"
+            class="img-fluid rounded-start"
+          />
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{x.service_name}}</h5>
+            <p class="card-text">
+              {{s.service_description}}
+            </p>
+            <p class="card-text">
+              <h4 class="text-muted">₱ {{x.service_price}}</h4>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div>
+<h5 class="mb-4 text-secondary">
+    No Top Services Available
+ </h5>
+</div>
+{% endif %}
