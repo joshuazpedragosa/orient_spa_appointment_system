@@ -125,6 +125,9 @@
             </div>
 
            </div>
+        <div class="row" id="topSales">
+            
+        </div>
         <div class="table-container" id="clientHomeTable">
           <div class="spinner-grow text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -140,6 +143,25 @@
     </div>
   </main>
   <!--Main layout-->
+  <script>
+    fetch('/controller/top_services/')
+    .then((response) => {
+        if(!response.ok){
+            throw new Error('Network response unstable.')
+        }
+        return response.text();
+    })
+    .then((html) => {
+        document.getElementById('topSales').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('API Error: ', error)
+        document.getElementById('clientHomeTable').innerHTML = `<div class="alert alert-danger">
+                                                            <i class="fas fa-triangle-exclamation"></i> 
+                                                            Something went wrong.
+                                                         </div>`;
+    })
+  </script>
   <script src="{% static 'js/modal_content.js' %}"></script>
   <script src="{% static 'client_home/client_home.js' %}"></script>
   {% include 'modal/modal.html' %}
