@@ -1403,3 +1403,24 @@ def update_salary(request):
     )
     
     return Response({'msg': 'Salary Updated!'})
+
+def top_services(request):
+    
+    all_services = services.objects.all().values()
+    all_ratings = ratings_comments.objects.all().values()
+    
+    top_services = []
+    
+    for service in all_services:
+        
+        good_ratings = 0
+        
+        for rating in all_ratings:        
+            if service['id'] == rating['service_id']:
+                if rating['ratings'] >= 4:
+                    good_ratings += 1
+                    
+        if good_ratings >= 5:
+            top_services.append(service)
+                    
+    return render(request, 'client_home_templates/top_services.html', {'data' : top_services})
