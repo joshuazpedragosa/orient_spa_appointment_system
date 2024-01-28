@@ -159,6 +159,25 @@
     </div>
   </main>
   <!--Main layout-->
+  <script>
+    function printDiv(name) {
+      let doneTransact = document.getElementById('doneTransact');
+      let action = document.getElementById('action');
+
+      action.style.display = 'none'
+      newWindow = window.open("");
+
+      newWindow.document.write('<style> table, tr, td, th {border: 1px solid black; border-collapse: collapse;} </style>')
+      newWindow.document.write('<table style="border: 1px solid black;">')
+      newWindow.document.write(doneTransact.innerHTML);
+      newWindow.document.write('</table>')
+      newWindow.document.write(`<div style="margin-left: 80%;"> <div style="padding-top: 20%;"> <div>___________________</div> <div style="text-align: center;">${name}</div> </div> </div>`)
+      newWindow.print();
+      newWindow.close(
+        action.style.display = 'block'
+      );
+  }
+  </script>
   <script src="{% static 'js/modal_content.js' %}"></script>
   <script src="{% static 'appointment/admin_appointment.js' %}"></script>
   <script src="{% static 'settings_api/admin_edit_account_notice.js' %}"></script>
